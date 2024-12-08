@@ -1,0 +1,45 @@
+.container {
+  float: left;
+  margin-top: 11%;
+  margin-left: 15%;
+}
+.header {
+  color: #23a9f4; /* Ustawia kolor tekstu na niebieski (#23a9f4) */
+  text-align: center; /* Wyrównuje tekst do środka */
+}
+
+.image-container {
+  float: right;
+  width: 60%;
+}
+
+.image {
+  width: 70%;
+}
+body {
+  background: #000;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.button-register {
+  text-align: end; /* Wyrównuje zawartość (przycisk) do środka */
+  margin-right: 30%;
+}
+@media screen and (max-width: 1260px) {
+  .container {
+    margin-left: 2%;
+    padding-right: 5%;
+    float: none;
+  }
+  .image-container {
+    width: 100%;
+    padding-left: 2%;
+    float: none;
+  }
+  .image {
+    width: 100%;
+  }
+  .button-register {
+    text-align: end; /* Wyrównuje zawartość (przycisk) do środka */
+  }
+}

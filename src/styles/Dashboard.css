@@ -1,0 +1,228 @@
+/* Resetowanie marginesów */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.App {
+  display: flex;
+  height: 100vh;
+}
+
+/* Styl dla głównej zawartości */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-logout {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: absolute; /* Ustawienie względem sidebaru */
+  bottom: 60px; /* Dystans od dołu */
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+.list {
+  color: #23a9f4;
+}
+.google-calendar {
+  border-radius: 10px;
+  height: 900px;
+  width: 100%;
+}
+.invoices-table,
+.employee-table {
+  border-spacing: 10px;
+  padding: 30px;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  width: 100%;
+}
+.invoices-table th,
+.employee-table th {
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+}
+.invoices-table td,
+.employee-table td {
+  padding-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+}
+.contact-section {
+  width: 100%;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  padding: 20px;
+  text-align: center;
+}
+.contact-section p {
+  font-size: xx-large;
+}
+.contact-section h2 {
+  font-size: 50px;
+}
+.icons-contact {
+  text-align: center;
+  align-items: center;
+}
+.icons-contact img {
+  padding: 10px 10px;
+}
+.invoicesTables1 {
+  border-spacing: 10px;
+  padding: 30px;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  position: relative;
+  width: 45%;
+  float: left;
+}
+.invoicesTables2 {
+  border-spacing: 10px;
+  padding: 30px;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  position: relative;
+  width: 45%;
+  float: left;
+  margin-left: 20px;
+}
+.invoicesTables1 th {
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+}
+.invoicesTables2 th {
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+}
+.invoicesTables1 td {
+  padding-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+}
+.invoicesTables2 td {
+  padding-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+}
+.timesheet {
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid;
+}
+.confirmButton,
+.deleteButton,
+.addButton {
+  margin: 10px;
+  /* dodaj inne parametry */
+}
+.delete-button {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-button:hover {
+  background-color: 2980b9;
+}
+.input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-row input {
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.input-row button {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form input {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #45a049;
+}

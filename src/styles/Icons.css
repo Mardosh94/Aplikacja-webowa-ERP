@@ -1,0 +1,39 @@
+.sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer; /* Zmieniamy kursor na wskaźnik */
+  transition: background-color 0.3s, color 0.3s; /* Animacja zmian koloru */
+}
+
+.sidebar-icon img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.sidebar-icon span {
+  color: white; /* Standardowy kolor tekstu */
+  font-weight: 500;
+}
+
+/* Styl podczas najechania myszką */
+.sidebar-icon:hover {
+  background-color: #007bff; /* Niebieskie tło */
+  color: white; /* Biały tekst */
+  border-color: #007bff; /* Zmieniamy kolor ramki na niebieski */
+}
+
+.sidebar-icon:hover span {
+  color: white; /* Biały tekst na niebieskim tle */
+}
+.sidebar-icon.active {
+  background-color: #1f1d25; /* Niebieskie tło */
+  color: white;
+  border-color: 333333;
+}
+
+.sidebar-icon.active span {
+  color: white; /* Biały tekst */
+}

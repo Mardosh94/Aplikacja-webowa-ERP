@@ -1,0 +1,23 @@
+.form-register input[type="text"],
+.form-register input[type="password"],
+.form-login input[type="text"],
+.form-login input[type="password"] {
+  font-size: small; /* Ustawia małą czcionkę */
+  padding: 15px; /* Dodaje 15px odstępu wewnętrznego wokół elementu */
+  margin: 5px 0 15px 0; /* Dodaje 5px odstępu powyżej i 15px poniżej pola, bez odstępu po bokach */
+  border: none; /* Usuwa domyślne obramowanie */
+  border-radius: 5px; /* Zaokrągla rogi pola */
+  background: #f1f1f1; /* Ustawia jasnoszare tło dla pól */
+  width: 100%;
+}
+@media screen and (max-width: 1260px) {
+  .form-register input[type="text"],
+  .form-register input[type="password"],
+  .form-login input[type="text"],
+  .form-login input[type="password"] {
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}

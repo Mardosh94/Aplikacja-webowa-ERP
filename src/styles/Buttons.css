@@ -1,0 +1,50 @@
+.button-register input[type="button"] {
+  background-color: #23a9f4; /* Ustawia kolor tła przycisku */
+  font-weight: bold; /* Ustawia pogrubioną czcionkę */
+  color: white; /* Ustawia kolor tekstu na biały */
+  padding: 14px 20px; /* Dodaje 14px odstępu wewnętrznego w pionie i 20px w poziomie */
+  margin: 10px 0; /* Dodaje 10px odstępu powyżej i poniżej przycisku */
+  border: none; /* Usuwa domyślne obramowanie */
+  border-radius: 5px; /* Zaokrągla rogi przycisku */
+  cursor: pointer; /* Zmienia kursor na wskaźnik przy najechaniu na przycisk */
+  opacity: 0.6; /* Ustawia przezroczystość przycisku na 90% */
+}
+.button-send input[type="button"] {
+  background-color: #23a9f4; /* Ustawia kolor tła przycisku */
+  font-weight: bold; /* Ustawia pogrubioną czcionkę */
+  color: white; /* Ustawia kolor tekstu na biały */
+  padding: 14px 20px; /* Dodaje 14px odstępu wewnętrznego w pionie i 20px w poziomie */
+  margin: 10px 0; /* Dodaje 10px odstępu powyżej i poniżej przycisku */
+  border: none; /* Usuwa domyślne obramowanie */
+  border-radius: 5px; /* Zaokrągla rogi przycisku */
+  cursor: pointer; /* Zmienia kursor na wskaźnik przy najechaniu na przycisk */
+  opacity: 0.6; /* Ustawia przezroczystość przycisku na 90% */
+  width: 110%;
+}
+.button-send input[type="button"]:hover,
+.button-register input[type="button"]:hover {
+  opacity: 1; /* Ustawia pełną przezroczystość przycisku przy najechaniu */
+}
+
+.error {
+  color: red;
+  font-size: small;
+}
+@media screen and (max-width: 1260px) {
+  .container {
+    width: 100%;
+  }
+  .button-send input[type="button"] {
+    width: 100%;
+    align-items: center;
+  }
+  .button-register {
+    position: relative;
+    width: 100%; /* Ustawia automatyczną szerokość przycisku */
+  }
+  .button-register input[type="button"] {
+    width: 100%; /* Ustawia szerokość na 100% dostępnej przestrzeni */
+    align-items: center; /* Wyrównuje elementy do środka w pionie */
+    justify-content: center; /* Wyrównuje elementy do środka w poziomie */
+  }
+}
