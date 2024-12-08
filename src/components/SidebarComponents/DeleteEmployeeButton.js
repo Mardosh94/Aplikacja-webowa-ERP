@@ -1,10 +1,8 @@
 import React from "react";
 
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
-
 const DeleteEmployeeButton = ({ employeeId, onDelete }) => {
   const handleDelete = () => {
-    fetch(`${APIAddress}/Employees/delete/${employeeId}`, {
+    fetch(`$/Employees/delete/${employeeId}`, {
       method: "DELETE",
     })
       .then((response) => {

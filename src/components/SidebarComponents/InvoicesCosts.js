@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Dashboard.css";
 
-//const APIAddress = process.env.REACT_APP_API_BASE_URL;
-
 const InvoicesCosts = () => {
   const [faktury, setFaktury] = useState([]);
 

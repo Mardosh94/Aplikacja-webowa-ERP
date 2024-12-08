@@ -3,8 +3,6 @@ import "../../styles/Dashboard.css";
 import AddEmployee from "./AddEmployee";
 import EditEmployeeModal from "./EditEmployeeModal"; // Nowy komponent modalu
 
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
-
 const EmployeeData = () => {
   const [employeeData, setEmployee] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Stan kontrolujący otwarcie modalu
@@ -12,14 +10,17 @@ const EmployeeData = () => {
 
   // Pobieranie danych pracowników
   useEffect(() => {
-    fetch(`${APIAddress}/Employees/getAll`)
+    fetch(`/Employees/getAll`)
       .then((response) => {
+        console.log("Status odpowiedzi:", response.status);
+        console.log("Nagłówki odpowiedzi:", response.headers);
         if (!response.ok) {
           throw new Error("Błąd podczas pobierania danych");
         }
         return response.json();
       })
       .then((data) => {
+        console.log("Dane z API:", data);
         setEmployee(data);
       })
       .catch((error) => {
@@ -29,7 +30,7 @@ const EmployeeData = () => {
 
   // Usuwanie pracownika
   const handleDeleteEmployee = (id) => {
-    fetch(`${APIAddress}/Employees/delete/${id}`, {
+    fetch(`$/Employees/delete/${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -51,7 +52,7 @@ const EmployeeData = () => {
 
   // Funkcja do zapisania edytowanych danych
   const handleSaveEditedEmployee = (editedEmployee) => {
-    fetch(`${APIAddress}/Employees/update/${editedEmployee.id}`, {
+    fetch(`$/Employees/update/${editedEmployee.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editedEmployee),

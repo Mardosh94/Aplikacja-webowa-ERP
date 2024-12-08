@@ -11,7 +11,6 @@ import ProtectedRoute from "./components/Routes/ProtectedRoute";
 import "./styles/App.css";
 import "./styles/Buttons.css";
 
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
 const App = () => {
   const [loginData, setLoginData] = useState({
     emailOrUserName: "",
@@ -66,7 +65,7 @@ const App = () => {
   const onClickLogin = async () => {
     if (validateLoginPassword()) {
       try {
-        const response = await fetch(`${APIAddress}/Auth/api/login`, {
+        const response = await fetch(`$/Auth/api/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -123,7 +122,7 @@ const App = () => {
     if (validateRegisterForm()) {
       try {
         console.log("JSON do rejestracji", registerData);
-        const response = await fetch(`${APIAddress}/Auth/api/register`, {
+        const response = await fetch(`$/Auth/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

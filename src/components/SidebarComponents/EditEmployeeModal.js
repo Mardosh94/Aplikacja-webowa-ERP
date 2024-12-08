@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
 
 const EditEmployeeModal = ({ employee, onSave, onClose }) => {
   const [formData, setFormData] = useState({
@@ -55,7 +54,7 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
     };
 
     // Send updated data to API for saving
-    fetch(`${APIAddress}/Employees/update`, {
+    fetch(`$/Employees/update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
