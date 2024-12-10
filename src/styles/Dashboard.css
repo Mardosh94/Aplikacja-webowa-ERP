@@ -49,7 +49,14 @@ button:hover {
   height: 900px;
   width: 100%;
 }
-.invoices-table,
+
+.employee-table {
+  width: 100%; /* Rozciąga tabelę na całą szerokość ekranu */
+  table-layout: fixed; /* Zapewnia równomierne rozłożenie szerokości komórek */
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
 .employee-table {
   border-spacing: 10px;
   padding: 30px;
@@ -57,14 +64,14 @@ button:hover {
   border-radius: 10px;
   background-color: white;
   color: black;
-  width: 100%;
+  width: auto;
 }
-.invoices-table th,
+
 .employee-table th {
   padding-bottom: 10px;
   border-bottom: 1px solid;
 }
-.invoices-table td,
+
 .employee-table td {
   padding-bottom: 10px;
   padding: 10px;
@@ -91,42 +98,28 @@ button:hover {
 .icons-contact img {
   padding: 10px 10px;
 }
-.invoicesTables1 {
-  border-spacing: 10px;
-  padding: 30px;
-  border: 1px solid;
-  border-radius: 10px;
-  background-color: white;
-  color: black;
-  position: relative;
-  width: 45%;
-  float: left;
-}
+.invoicesTables1,
 .invoicesTables2 {
   border-spacing: 10px;
+  margin-left: 30px;
+  bottom: 10px;
+  top: 25px;
   padding: 30px;
   border: 1px solid;
   border-radius: 10px;
   background-color: white;
   color: black;
   position: relative;
-  width: 45%;
+  width: 40%;
   float: left;
-  margin-left: 20px;
 }
-.invoicesTables1 th {
-  padding-bottom: 10px;
-  border-bottom: 1px solid;
-}
+.invoicesTables1 th,
 .invoicesTables2 th {
   padding-bottom: 10px;
   border-bottom: 1px solid;
 }
-.invoicesTables1 td {
-  padding-bottom: 10px;
-  padding: 10px;
-  text-align: left;
-}
+
+.invoicesTables1 td,
 .invoicesTables2 td {
   padding-bottom: 10px;
   padding: 10px;
@@ -158,14 +151,16 @@ button:hover {
 }
 .input-row {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-wrap: wrap; /* Dzięki temu elementy formularza mogą się układać w nowej linii, gdy brakuje miejsca */
+  gap: 10px; /* Odstęp między polami */
+  justify-content: space-between;
 }
 
 .input-row input {
-  padding: 5px;
-  font-size: 14px;
-  border-radius: 5px;
+  flex: 10%; /* Każde pole ma 45% szerokości, ale może się zmieniać w zależności od dostępnej przestrzeni */
+  max-width: 100%; /* Zapewnia, że pole nie wyjdzie poza ekran */
+  box-sizing: border-box; /* Zapobiega rozszerzaniu się elementu poza ustaloną szerokość */
+  padding: 7px;
 }
 
 .input-row button {
@@ -177,9 +172,9 @@ button:hover {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,16 +184,16 @@ button:hover {
 .modal-content {
   background-color: white;
   padding: 20px;
-  width: 400px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 50%;
+  position: relative;
 }
 
 .close {
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 24px;
+  font-size: 30px;
   cursor: pointer;
 }
 
@@ -216,7 +211,7 @@ form input {
 
 form button {
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 5px;
@@ -224,5 +219,23 @@ form button {
 }
 
 form button:hover {
-  background-color: #45a049;
+  background-color: #2980b9;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end; /* Przesuwa przyciski na prawą stronę */
+  gap: 10px; /* Ustawia odstęp między przyciskami */
+}
+.add-employee {
+  width: 100%; /* Zapewnia, że formularz będzie mieścił się w obrębie ekranu */
+  padding: 20px;
+  box-sizing: border-box;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
 }

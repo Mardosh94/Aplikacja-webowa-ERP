@@ -6,19 +6,21 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
     lastName: "",
     email: "",
     dateOfBirth: "",
+    phoneNumber: "",
     city: "",
     postCode: "",
     street: "",
     buildingNumber: "",
   });
 
-  // Initialize form data with employee details when modal opens
+  // Inicjalizacja danych w formularzu przy otwarciu modalu
   useEffect(() => {
     if (employee) {
       setFormData({
         firstName: employee.firstName,
         lastName: employee.lastName,
         email: employee.email,
+        phoneNumber: employee.phoneNumber,
         dateOfBirth: employee.dateOfBirth,
         city: employee.address.city,
         postCode: employee.address.postCode,
@@ -38,12 +40,12 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create the updated employee object to match the API format
     const updatedEmployee = {
+      id: employee.id,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
+      phoneNumber: formData.phoneNumber,
       dateOfBirth: formData.dateOfBirth,
       address: {
         city: formData.city,
@@ -53,27 +55,7 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
       },
     };
 
-    // Send updated data to API for saving
-    fetch(`$/Employees/update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedEmployee),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Błąd podczas zapisywania danych");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Dane pracownika zostały zaktualizowane:", data);
-        onSave(updatedEmployee, onClose()); // Update local state after successful API call
-      })
-      .catch((error) => {
-        console.error("Błąd podczas zapisywania danych:", error);
-      });
+    onSave(updatedEmployee); // Zapisz zaktualizowanego pracownika
   };
 
   return (
@@ -82,7 +64,7 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
         <span className="close" onClick={onClose}>
           &times;
         </span>
-        <h2>Edytuj dane pracownika</h2>
+        <h2>Edycja pracownika</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -106,6 +88,14 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
             value={formData.email}
             onChange={handleInputChange}
             placeholder="Email"
+            required
+          />
+          <input
+            type="text"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleInputChange}
+            placeholder="Numer telefonu"
             required
           />
           <input

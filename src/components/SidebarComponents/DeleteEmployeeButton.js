@@ -9,7 +9,7 @@ const DeleteEmployeeButton = ({ employeeId, onDelete }) => {
         if (!response.ok) {
           throw new Error("Błąd podczas usuwania pracownika");
         }
-        onDelete(employeeId); // Wywołanie funkcji aktualizacji po usunięciu
+        onDelete(employeeId);
       })
       .catch((error) => {
         console.error("Błąd podczas usuwania pracownika:", error);

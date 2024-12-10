@@ -6,6 +6,7 @@ const AddEmployee = ({ onAddEmployee }) => {
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber: "",
     dateOfBirth: "",
     address: {
       city: "",
@@ -47,6 +48,7 @@ const AddEmployee = ({ onAddEmployee }) => {
       !newEmployee.firstName ||
       !newEmployee.lastName ||
       !newEmployee.email ||
+      !newEmployee.phoneNumber ||
       !newEmployee.dateOfBirth ||
       !newEmployee.address.city ||
       !newEmployee.address.postCode ||
@@ -64,6 +66,7 @@ const AddEmployee = ({ onAddEmployee }) => {
       firstName: "",
       lastName: "",
       email: "",
+      phoneNumber: "",
       dateOfBirth: "",
       address: {
         city: "",
@@ -100,6 +103,13 @@ const AddEmployee = ({ onAddEmployee }) => {
           value={newEmployee.email}
           onChange={handleChange}
           placeholder="Email"
+        />
+        <input
+          type="text"
+          name="phoneNumber"
+          value={newEmployee.phoneNumber}
+          onChange={handleChange}
+          placeholder="numer telefonu"
         />
         <input
           type="date"

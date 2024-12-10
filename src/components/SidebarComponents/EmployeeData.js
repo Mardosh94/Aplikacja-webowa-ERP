@@ -9,28 +9,29 @@ const EmployeeData = () => {
   const [employeeToEdit, setEmployeeToEdit] = useState(null); // Przechowywanie edytowanego pracownika
 
   // Pobieranie danych pracowników
-  useEffect(() => {
+  const fetchEmployees = () => {
     fetch(`/Employees/getAll`)
       .then((response) => {
-        console.log("Status odpowiedzi:", response.status);
-        console.log("Nagłówki odpowiedzi:", response.headers);
         if (!response.ok) {
           throw new Error("Błąd podczas pobierania danych");
         }
         return response.json();
       })
       .then((data) => {
-        console.log("Dane z API:", data);
         setEmployee(data);
       })
       .catch((error) => {
         console.error("Błąd podczas pobierania danych:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchEmployees();
   }, []);
 
   // Usuwanie pracownika
   const handleDeleteEmployee = (id) => {
-    fetch(`$/Employees/delete/${id}`, {
+    fetch(`/Employees/delete/${id}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -50,23 +51,68 @@ const EmployeeData = () => {
     setIsModalOpen(true); // Otwieramy modal
   };
 
-  // Funkcja do zapisania edytowanych danych
-  const handleSaveEditedEmployee = (editedEmployee) => {
-    fetch(`$/Employees/update/${editedEmployee.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editedEmployee),
+  // Dodawanie nowego pracownika
+  const handleAddNewEmployee = (newEmployee) => {
+    fetch(`/Employees/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newEmployee),
     })
       .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        }
+        throw new Error("Błąd podczas dodawania pracownika");
+      })
+      .then((createdEmployee) => {
+        setEmployee((prev) => [...prev, createdEmployee]);
+      })
+      .catch((error) => {
+        console.error("Błąd podczas dodawania pracownika:", error);
+      });
+  };
+
+  // Funkcja do zapisania edytowanych danych (z `id` w URL, ale bez `id` w JSON)
+  const handleSaveEditedEmployee = (editedEmployee) => {
+    // Wysłanie danych pracownika zaktualizowanych, ale bez `id` w ciele
+    fetch(`/Employees/update?id=${editedEmployee.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName: editedEmployee.firstName,
+        lastName: editedEmployee.lastName,
+        email: editedEmployee.email,
+        phoneNumber: editedEmployee.phoneNumber,
+        dateOfBirth: editedEmployee.dateOfBirth,
+        address: editedEmployee.address,
+      }),
+    })
+      .then((response) => {
+        console.log(
+          JSON.stringify({
+            firstName: editedEmployee.firstName,
+            lastName: editedEmployee.lastName,
+            email: editedEmployee.email,
+            phoneNumber: editedEmployee.phoneNumber,
+            dateOfBirth: editedEmployee.dateOfBirth,
+            address: editedEmployee.address,
+          })
+        );
         if (!response.ok) {
           throw new Error("Błąd podczas zapisywania danych");
         }
+        return response.json();
+      })
+      .then((updatedData) => {
+        // Zaktualizowanie danych na liście po zapisaniu
         setEmployee((prev) =>
           prev.map((emp) =>
-            emp.id === editedEmployee.id ? editedEmployee : emp
+            emp.id === editedEmployee.id ? { ...emp, ...updatedData } : emp
           )
         );
-        setIsModalOpen(false); // Zamykamy modal po zapisaniu
+        setIsModalOpen(false); // Zamknij modal po zapisaniu
       })
       .catch((error) => {
         console.error("Błąd podczas zapisywania danych:", error);
@@ -76,16 +122,13 @@ const EmployeeData = () => {
   return (
     <div>
       <h1>Lista pracowników</h1>
-      <AddEmployee
-        onAddEmployee={(newEmployee) =>
-          setEmployee((prev) => [...prev, newEmployee])
-        }
-      />
+      <AddEmployee onAddEmployee={handleAddNewEmployee} />
       <table className="employee-table">
         <thead>
           <tr>
             <th>Imię i Nazwisko</th>
             <th>Email</th>
+            <th>Numer telefonu</th>
             <th>Data urodzenia</th>
             <th>Adres</th>
             <th>Akcje</th>
@@ -96,6 +139,7 @@ const EmployeeData = () => {
             <tr key={employee.id}>
               <td>{`${employee.firstName} ${employee.lastName}`}</td>
               <td>{employee.email}</td>
+              <td>{employee.phoneNumber}</td>
               <td>
                 {employee.dateOfBirth
                   ? new Date(employee.dateOfBirth).toLocaleDateString()
@@ -106,17 +150,11 @@ const EmployeeData = () => {
                   ? `${employee.address.city}, ${employee.address.postCode}, ${employee.address.street} ${employee.address.buildingNumber}`
                   : "Brak adresu"}
               </td>
-              <td>
-                <button
-                  className="edit-button"
-                  onClick={() => handleEditEmployee(employee)}
-                >
+              <td className="actions">
+                <button onClick={() => handleEditEmployee(employee)}>
                   Edytuj
                 </button>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteEmployee(employee.id)}
-                >
+                <button onClick={() => handleDeleteEmployee(employee.id)}>
                   Usuń
                 </button>
               </td>
