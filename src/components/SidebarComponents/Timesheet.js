@@ -1,24 +1,23 @@
-import "../styles/Dashboard.css";
+import React from "react";
+import "../../styles/Dashboard.css";
 
-const Timesheet = ({ name, dateTime, hourIn, hourOut, hours }) => (
+const Timesheet = ({ name, timesheetData }) => (
   <div className="timesheet">
     <h1>Lista obecności {name ? name : "Wybierz imię z listy"}</h1>
     <table>
       <thead>
         <tr>
           <th>Data</th>
-          <th>Godzina wejścia</th>
-          <th>Godzina wyjścia</th>
           <th>Liczba godzin</th>
         </tr>
       </thead>
-      <tbody style={{ color: "red" }}>
-        <tr>
-          <td>{dateTime}</td>
-          <td>{hourIn}</td>
-          <td>{hourOut}</td>
-          <td>{hours}</td>
-        </tr>
+      <tbody>
+        {timesheetData.map((entry, index) => (
+          <tr key={index}>
+            <td>{entry.date}</td>
+            <td>{entry.timeOfWorking}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   </div>

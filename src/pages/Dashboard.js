@@ -3,6 +3,7 @@ import Sidebar from "../components/SidebarComponents/Sidebar";
 import "../styles/Dashboard.css";
 import GoogleCalendar from "../components/SidebarComponents/GoogleCalendar";
 import EmployeeData from "../components/SidebarComponents/EmployeeData";
+import TimesheetData from "../components/SidebarComponents/TimesheetData";
 import Contact from "../components/SidebarComponents/Contact";
 import InvoicesClient from "../components/SidebarComponents/InvoicesClient";
 import InvoicesCosts from "../components/SidebarComponents/InvoicesCosts";
@@ -21,7 +22,8 @@ function Dashboard({ setIsAuthenticated }) {
       case "present-list":
         return (
           <div className="list">
-            <h1>Lista pracowników</h1>
+            <h1>Lista obecności</h1>
+            <TimesheetData />
           </div>
         );
       case "orders-list":

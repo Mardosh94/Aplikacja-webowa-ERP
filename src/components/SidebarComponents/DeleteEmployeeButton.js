@@ -2,7 +2,7 @@ import React from "react";
 
 const DeleteEmployeeButton = ({ employeeId, onDelete }) => {
   const handleDelete = () => {
-    fetch(`$/Employees/delete/${employeeId}`, {
+    fetch(`/Employees/delete/${employeeId}`, {
       method: "DELETE",
     })
       .then((response) => {
