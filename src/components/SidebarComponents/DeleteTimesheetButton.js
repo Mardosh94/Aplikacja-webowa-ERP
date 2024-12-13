@@ -1,26 +1,21 @@
-import React from "react";
-
-const DeleteTimesheetButton = ({ employeeId, timesheetId, onDelete }) => {
-  const handleDelete = () => {
-    fetch(`/Timesheet/delete/${employeeId}/${timesheetId}`, {
-      method: "DELETE",
+const deleteTimesheetEntry = (employeeId, timesheetId) => {
+  return fetch(`/Timesheet/delete/${employeeId}/${timesheetId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.status === 204) {
+        console.log("Wpis usunięty pomyślnie, brak danych w odpowiedzi.");
+        return null;
+      }
+      return response.json();
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Błąd podczas usuwania pracownika");
-        }
-        onDelete(employeeId, timesheetId);
-      })
-      .catch((error) => {
-        console.error("Błąd podczas usuwania pracownika:", error);
-      });
-  };
-
-  return (
-    <button className="delete-button" onClick={handleDelete}>
-      Usuń
-    </button>
-  );
+    .catch((error) => {
+      console.error("Błąd podczas usuwania wpisu:", error);
+      throw error;
+    });
 };
 
-export default DeleteTimesheetButton;
+export default deleteTimesheetEntry;

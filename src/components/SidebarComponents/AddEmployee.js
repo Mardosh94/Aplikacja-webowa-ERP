@@ -21,7 +21,6 @@ const AddEmployee = ({ onAddEmployee }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Obsługa adresu jako obiektu
     if (name.startsWith("address.")) {
       const field = name.split(".")[1];
       setNewEmployee((prev) => ({
@@ -38,12 +37,10 @@ const AddEmployee = ({ onAddEmployee }) => {
       }));
     }
 
-    // Usuwamy błąd, gdy użytkownik zaczyna wprowadzać poprawne dane
     setError("");
   };
 
   const handleAddEmployee = () => {
-    // Walidacja danych
     if (
       !newEmployee.firstName ||
       !newEmployee.lastName ||
@@ -61,7 +58,6 @@ const AddEmployee = ({ onAddEmployee }) => {
 
     onAddEmployee(newEmployee);
 
-    // Resetujemy formularz po udanym dodaniu
     setNewEmployee({
       firstName: "",
       lastName: "",

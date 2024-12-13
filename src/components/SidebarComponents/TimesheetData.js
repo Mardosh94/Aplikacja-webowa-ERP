@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-// import AddTimesheet from "./AddTimesheet";
+import AddTimesheet from "./AddTimesheet";
+import deleteTimesheetEntry from "../SidebarComponents/DeleteTimesheetButton";
 
 function TimesheetData() {
-  const [employees, setEmployees] = useState([]); // Lista pracowników
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); // Wybrany ID pracownika
-  const [workLog, setWorkLog] = useState(null); // Dane ewidencji czasu pracy
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const [workLog, setWorkLog] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Pobieranie listy pracowników
   useEffect(() => {
-    fetch("Employees/getAll") // Podmień na właściwy endpoint
+    fetch("Employees/getAll")
       .then((response) => response.json())
       .then((data) => setEmployees(data))
       .catch((error) =>
@@ -16,26 +18,90 @@ function TimesheetData() {
       );
   }, []);
 
-  // Pobieranie ewidencji czasu pracy po wybraniu pracownika
   useEffect(() => {
     if (selectedEmployeeId) {
-      fetch(`/Timesheet/get/${selectedEmployeeId}`) // Podmień na właściwy endpoint
-        .then((response) => response.json())
-        .then((data) => setWorkLog(data))
-        .catch((error) =>
-          console.error("Błąd przy pobieraniu ewidencji czasu pracy:", error)
-        );
+      setIsLoading(true);
+      setError(null);
+
+      fetch(`/Timesheet/get/${selectedEmployeeId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (!data || Object.keys(data).length === 0) {
+            console.warn("Brak danych dla wybranego pracownika.");
+            setWorkLog([]);
+          } else {
+            setWorkLog(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Błąd przy pobieraniu ewidencji czasu pracy:", error);
+          setError("Nie udało się pobrać danych. Spróbuj ponownie.");
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      setWorkLog(null);
     }
   }, [selectedEmployeeId]);
+
+  const handleDelete = (index) => {
+    if (
+      !selectedEmployeeId ||
+      !workLog ||
+      index < 0 ||
+      index >= workLog.length
+    ) {
+      console.error("Nieprawidłowe dane do usunięcia.");
+      return;
+    }
+
+    const timesheetId = workLog[index]?.id;
+
+    deleteTimesheetEntry(selectedEmployeeId, timesheetId)
+      .then(() => {
+        fetch(`/Timesheet/get/${selectedEmployeeId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (!data || Object.keys(data).length === 0) {
+              console.warn("Brak danych po usunięciu.");
+              setWorkLog([]);
+            } else {
+              setWorkLog(data);
+            }
+          })
+          .catch((error) => {
+            console.error("Błąd przy ponownym pobieraniu ewidencji:", error);
+            setError("Nie udało się pobrać danych. Spróbuj ponownie.");
+          });
+      })
+      .catch((error) => {
+        console.error("Błąd podczas usuwania:", error);
+        setError("Nie udało się usunąć wpisu. Spróbuj ponownie.");
+      });
+  };
+  const addTimesheet = (newTimesheet) => {
+    setWorkLog((prevLogs) => [...prevLogs, newTimesheet]);
+  };
 
   return (
     <div>
       <select
         onChange={(e) => setSelectedEmployeeId(parseInt(e.target.value, 10))}
-        defaultValue="" // Domyślny wybór (pusta opcja)
+        defaultValue=""
       >
         <option value="" disabled>
-          Wybierz pracownika...
+          {employees.length === 0
+            ? "Brak dostępnych pracowników"
+            : "Wybierz pracownika..."}
         </option>
         {employees.map((employee) => (
           <option key={employee.id} value={employee.id}>
@@ -46,7 +112,17 @@ function TimesheetData() {
 
       {selectedEmployeeId && (
         <div>
-          {workLog ? (
+          {selectedEmployeeId && (
+            <AddTimesheet
+              selectedEmployeeId={selectedEmployeeId}
+              onAddTimesheet={addTimesheet}
+            />
+          )}
+          {isLoading ? (
+            <p className="message loading">Ładowanie danych...</p>
+          ) : error ? (
+            <p className="message error">{error}</p>
+          ) : workLog && workLog.length > 0 ? (
             <table className="invoicesTables1">
               <thead>
                 <tr>
@@ -65,14 +141,14 @@ function TimesheetData() {
                     </td>
                     <td>{log.timeOfWorking}</td>
                     <td>
-                      <button>Usuń</button>
+                      <button onClick={() => handleDelete(index)}>Usuń</button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           ) : (
-            <p>Brak danych do wyświetlenia.</p>
+            <p className="message">Brak danych do wyświetlenia.</p>
           )}
         </div>
       )}

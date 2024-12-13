@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Dashboard.css";
 import AddEmployee from "./AddEmployee";
-import EditEmployeeModal from "./EditEmployeeModal"; // Nowy komponent modalu
+import EditEmployeeModal from "./EditEmployeeModal";
 
 const EmployeeData = () => {
   const [employeeData, setEmployee] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Stan kontrolujący otwarcie modalu
-  const [employeeToEdit, setEmployeeToEdit] = useState(null); // Przechowywanie edytowanego pracownika
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [employeeToEdit, setEmployeeToEdit] = useState(null);
 
-  // Pobieranie danych pracowników
   const fetchEmployees = () => {
     fetch(`/Employees/getAll`)
       .then((response) => {
@@ -29,7 +28,6 @@ const EmployeeData = () => {
     fetchEmployees();
   }, []);
 
-  // Usuwanie pracownika
   const handleDeleteEmployee = (id) => {
     fetch(`/Employees/delete/${id}`, {
       method: "DELETE",
@@ -45,13 +43,11 @@ const EmployeeData = () => {
       });
   };
 
-  // Funkcja otwierająca modal edycji
   const handleEditEmployee = (employee) => {
-    setEmployeeToEdit(employee); // Ustawiamy pracownika do edycji
-    setIsModalOpen(true); // Otwieramy modal
+    setEmployeeToEdit(employee);
+    setIsModalOpen(true);
   };
 
-  // Dodawanie nowego pracownika
   const handleAddNewEmployee = (newEmployee) => {
     fetch(`/Employees/add`, {
       method: "POST",
@@ -74,9 +70,7 @@ const EmployeeData = () => {
       });
   };
 
-  // Funkcja do zapisania edytowanych danych (z `id` w URL, ale bez `id` w JSON)
   const handleSaveEditedEmployee = (editedEmployee) => {
-    // Wysłanie danych pracownika zaktualizowanych, ale bez `id` w ciele
     fetch(`/Employees/update?id=${editedEmployee.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -106,13 +100,12 @@ const EmployeeData = () => {
         return response.json();
       })
       .then((updatedData) => {
-        // Zaktualizowanie danych na liście po zapisaniu
         setEmployee((prev) =>
           prev.map((emp) =>
             emp.id === editedEmployee.id ? { ...emp, ...updatedData } : emp
           )
         );
-        setIsModalOpen(false); // Zamknij modal po zapisaniu
+        setIsModalOpen(false);
       })
       .catch((error) => {
         console.error("Błąd podczas zapisywania danych:", error);
@@ -163,7 +156,6 @@ const EmployeeData = () => {
         </tbody>
       </table>
 
-      {/* Modal edycji pracownika */}
       {isModalOpen && (
         <EditEmployeeModal
           employee={employeeToEdit}

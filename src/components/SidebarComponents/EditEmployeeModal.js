@@ -13,7 +13,6 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
     buildingNumber: "",
   });
 
-  // Inicjalizacja danych w formularzu przy otwarciu modalu
   useEffect(() => {
     if (employee) {
       setFormData({
@@ -55,7 +54,7 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
       },
     };
 
-    onSave(updatedEmployee); // Zapisz zaktualizowanego pracownika
+    onSave(updatedEmployee);
   };
 
   return (
