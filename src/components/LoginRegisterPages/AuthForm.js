@@ -41,11 +41,11 @@ const AuthForm = ({
         />
       ) : (
         <LoginForm
-          loginFormData={loginFormData} // Przekazywanie danych do formularza logowania
-          errors={errors} // Przekazanie błędów do formularza logowania
-          onChangeLogin={onChangeLogin} // Funkcja do zmiany loginu
-          onChangePassword={onChangePassword} // Funkcja do zmiany hasła
-          onLogin={onClickLogin} // Obsługa logowania
+          loginFormData={loginFormData}
+          errors={errors}
+          onChangeLogin={onChangeLogin}
+          onChangePassword={onChangePassword}
+          onLogin={onClickLogin}
         />
       )}
     </div>
@@ -53,7 +53,7 @@ const AuthForm = ({
       <div className="button-toggle">
         <RegisterButton
           text={showRegister ? "Zaloguj!" : "Zarejestruj się"}
-          onClick={toggleForm} // Funkcja do przełączania formularzy
+          onClick={toggleForm}
         />
       </div>
       {!showRegister ? (

@@ -6,10 +6,9 @@ import LogoutButton from "../LoginRegisterPages/LogoutButton";
 const Sidebar = ({ onMenuItemClick, setIsAuthenticated }) => {
   const [activeItem, setActiveItem] = useState("");
 
-  // Użycie efektu do ustawienia domyślnego elementu "calendar" po załadowaniu komponentu
   useEffect(() => {
     setActiveItem("calendar");
-    onMenuItemClick("calendar"); // Wywołanie funkcji, aby również zaktualizować stan w komponencie nadrzędnym
+    onMenuItemClick("calendar");
   }, [onMenuItemClick]);
 
   const handleItemClick = (text) => {

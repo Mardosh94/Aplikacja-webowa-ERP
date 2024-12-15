@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Dashboard.css";
-//import APIAddress from "../../Config"
 
 const InvoicesClient = () => {
   const [faktury, setFaktury] = useState([]);

@@ -91,17 +91,14 @@ const App = () => {
   const validateRegisterForm = () => {
     const newErrors = {};
 
-    // Sprawdzanie, czy hasła się zgadzają
     if (registerData.password !== registerData.confirmPassword) {
       newErrors.confirmPassword = "Hasła muszą być identyczne!";
     }
 
-    // Sprawdzanie minimalnej długości hasła
     if (registerData.password.length < 6) {
       newErrors.password = "Hasło musi mieć co najmniej 6 znaków.";
     }
 
-    // Sprawdzanie, czy wszystkie pola są wypełnione
     if (!registerData.email) {
       newErrors.email = "Email jest wymagany!";
     }
@@ -115,7 +112,7 @@ const App = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Jeśli brak błędów, formularz jest gotowy do wysłania
+    return Object.keys(newErrors).length === 0;
   };
 
   const onClickRegister = async () => {
@@ -133,7 +130,7 @@ const App = () => {
         if (response.ok) {
           const data = await response.json();
           console.log("Zarejestrowano pomyślnie!", data);
-          setShowRegister(false); // Przełączenie na formularz logowania
+          setShowRegister(false);
         } else {
           const error = await response.text();
           setErrors({ server: error });
