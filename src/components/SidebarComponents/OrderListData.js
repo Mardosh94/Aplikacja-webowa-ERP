@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from "react";
-import AddTimesheet from "./AddTimesheet";
-import deleteTimesheetButton from "../SidebarComponents/DeleteTimesheetButton";
+import deleteTimesheetEntry from "../SidebarComponents/DeleteTimesheetButton";
+import AddOrder from "./AddOrder";
 
-function TimesheetData() {
-  const [employees, setEmployees] = useState([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+function OrderListData() {
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [workLog, setWorkLog] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Pobranie listy pracowników
   useEffect(() => {
-    fetch("Employees/getAll")
+    fetch("Customers/getAll")
       .then((response) => response.json())
-      .then((data) => setEmployees(data))
+      .then((data) => setCustomers(data))
       .catch((error) =>
-        console.error("Błąd przy pobieraniu pracowników:", error)
+        console.error("Błąd przy pobieraniu kontrahentów:", error)
       );
   }, []);
 
-  // Pobranie timesheetów dla wybranego pracownika
   useEffect(() => {
-    if (selectedEmployeeId) {
+    if (selectedCustomerId) {
       setIsLoading(true);
       setError(null);
 
-      fetch(`/Employees/${selectedEmployeeId}/Timesheets`)
+      fetch(`/Customers/${selectedCustomerId}/Orders`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -34,26 +32,25 @@ function TimesheetData() {
         })
         .then((data) => {
           if (!data || Object.keys(data).length === 0) {
-            console.warn("Brak danych dla wybranego pracownika.");
+            console.warn("Brak danych dla wybranego kontrahenta.");
             setWorkLog([]);
           } else {
             setWorkLog(data);
           }
         })
         .catch((error) => {
-          console.error("Błąd przy pobieraniu ewidencji czasu pracy:", error);
+          console.error("Błąd przy pobieraniu listy zamównień:", error);
           setError("Nie udało się pobrać danych. Spróbuj ponownie.");
         })
         .finally(() => setIsLoading(false));
     } else {
       setWorkLog(null);
     }
-  }, [selectedEmployeeId]);
+  }, [selectedCustomerId]);
 
-  // Usuwanie timesheetu i odświeżanie listy
   const handleDelete = (index) => {
     if (
-      !selectedEmployeeId ||
+      !selectedCustomerId ||
       !workLog ||
       index < 0 ||
       index >= workLog.length
@@ -62,13 +59,13 @@ function TimesheetData() {
       return;
     }
 
-    const timesheetId = workLog[index]?.id;
+    const orderId = workLog[index]?.id;
 
-    deleteTimesheetButton(selectedEmployeeId, timesheetId)
+    deleteTimesheetEntry(selectedCustomerId, orderId)
       .then(() => {
-        console.log(`Timesheet o ID ${timesheetId} został usunięty.`);
+        console.log(`Zamównienie o ID ${orderId} zostało usunięte.`);
         // Po usunięciu odśwież listę timesheetów
-        fetch(`/Employees/${selectedEmployeeId}/Timesheets`)
+        fetch(`/Customers/${selectedCustomerId}/Orders`)
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
@@ -76,7 +73,7 @@ function TimesheetData() {
             return response.json();
           })
           .then((data) => {
-            setWorkLog(data || []); // Aktualizujemy stan
+            setWorkLog(data || []);
           })
           .catch((error) => {
             console.error("Błąd przy ponownym pobieraniu ewidencji:", error);
@@ -89,35 +86,34 @@ function TimesheetData() {
       });
   };
 
-  // Dodanie nowego timesheetu
-  const addTimesheet = (newTimesheet) => {
-    setWorkLog((prevLogs) => [...prevLogs, newTimesheet]);
+  const addOrder = (newOrder) => {
+    setWorkLog((prevLogs) => [...prevLogs, newOrder]);
   };
 
   return (
     <div>
       <select
-        onChange={(e) => setSelectedEmployeeId(parseInt(e.target.value, 10))}
+        onChange={(e) => setSelectedCustomerId(parseInt(e.target.value, 10))}
         defaultValue=""
       >
         <option value="" disabled>
-          {employees.length === 0
+          {customers.length === 0
             ? "Brak dostępnych pracowników"
             : "Wybierz pracownika..."}
         </option>
-        {employees.map((employee) => (
-          <option key={employee.id} value={employee.id}>
-            {employee.firstName} {employee.lastName}
+        {customers.map((customer) => (
+          <option key={customer.id} value={customer.id}>
+            {customer.companyName} {customer.firstName} {customer.lastName}
           </option>
         ))}
       </select>
 
-      {selectedEmployeeId && (
+      {selectedCustomerId && (
         <div>
-          {selectedEmployeeId && (
-            <AddTimesheet
-              selectedEmployeeId={selectedEmployeeId}
-              onAddTimesheet={addTimesheet}
+          {selectedCustomerId && (
+            <AddOrder
+              selectedEmployeeId={selectedCustomerId}
+              onAddTimesheet={addOrder}
             />
           )}
           {isLoading ? (
@@ -126,22 +122,25 @@ function TimesheetData() {
             <p className="message error">{error}</p>
           ) : workLog && workLog.length > 0 ? (
             <table className="invoicesTables1">
+              {/* Do zmiany className */}
               <thead>
                 <tr>
                   <th>Data</th>
-                  <th>Czas pracy</th>
-                  <th></th>
+                  <th>Opis</th>
+                  <th>Status</th>
+                  <th>Akcje</th>
                 </tr>
               </thead>
               <tbody>
                 {workLog.map((log, index) => (
                   <tr key={index}>
                     <td>
-                      {log.date
-                        ? new Date(log.date).toLocaleDateString()
+                      {log.orderDate
+                        ? new Date(log.orderDate).toLocaleDateString()
                         : "Brak danych"}
                     </td>
-                    <td>{log.timeOfWorking}</td>
+                    <td>{log.description}</td>
+                    <td>{log.status}</td>
                     <td>
                       <button onClick={() => handleDelete(index)}>Usuń</button>
                     </td>
@@ -158,4 +157,4 @@ function TimesheetData() {
   );
 }
 
-export default TimesheetData;
+export default OrderListData;

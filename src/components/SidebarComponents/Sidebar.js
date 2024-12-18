@@ -61,6 +61,13 @@ const Sidebar = ({ onMenuItemClick, setIsAuthenticated }) => {
             onClick={() => handleItemClick("employee-data")}
           />
         </li>
+        <li>
+          <Icons
+            text="DANE KONTRAHENTÓW"
+            isActive={activeItem === "customer-data"}
+            onClick={() => handleItemClick("customer-data")}
+          />
+        </li>
         <LogoutButton setIsAuthenticated={setIsAuthenticated} />
       </ul>
     </div>

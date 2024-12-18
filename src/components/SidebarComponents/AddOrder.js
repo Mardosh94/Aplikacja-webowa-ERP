@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "../../styles/Dashboard.css";
 
-const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
-  const [newTimesheet, setNewTimesheet] = useState({
-    date: "",
-    timeOfWorking: "",
+const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
+  const [newOrder, setNewOrder] = useState({
+    orderDate: "",
+    description: "",
   });
 
   const [error, setError] = useState("");
@@ -14,36 +14,33 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
 
     if (name === "timeOfWorking") {
       const parsedValue = parseFloat(value);
-      setNewTimesheet((prevState) => ({
+      setNewOrder((prevState) => ({
         ...prevState,
         [name]: isNaN(parsedValue) ? "" : parsedValue,
       }));
     } else {
-      setNewTimesheet((prevState) => ({
+      setNewOrder((prevState) => ({
         ...prevState,
         [name]: value,
       }));
     }
   };
 
-  const handleAddTimesheet = async () => {
-    if (!newTimesheet.date || !newTimesheet.timeOfWorking) {
+  const handleAddOrder = async () => {
+    if (!newOrder.orderDate || !newOrder.description) {
       setError("Wszystkie pola muszą zostać uzupełnione.");
       return;
     }
 
     try {
-      const response = await fetch(
-        `/Employees/${selectedEmployeeId}/Timesheets`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newTimesheet),
-        }
-      );
-      console.log(newTimesheet);
+      const response = await fetch(`/Customers/${selectedCusotmerId}/Oreders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newOrder),
+      });
+      console.log(newOrder);
       if (!response.ok) {
         const errorText = await response.text();
         setError(`Błąd serwera: ${response.status}. ${errorText}`);
@@ -56,8 +53,8 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
         console.log("Odpowiedź serwera (JSON):", data);
 
         if (response.status === 201) {
-          onAddTimesheet(data);
-          setNewTimesheet({ date: "", timeOfWorking: "" });
+          onAddOrder(data);
+          setNewOrder({ date: "", orderDate: "", status: "" });
           setError("");
         } else {
           setError(data.message || "Nie udało się dodać wpisu.");
@@ -74,28 +71,28 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
   };
 
   return (
-    <div className="add-employee">
-      <h2>Dodaj czas pracy</h2>
+    <div className="add-customer">
+      <h2>Dodaj zlecenie</h2>
       <div className="input-row">
         <input
           type="date"
           name="date"
-          value={newTimesheet.date}
+          value={newOrder.OrderDate}
           onChange={handleChange}
         />
         <input
-          type="number"
-          name="timeOfWorking"
-          value={newTimesheet.timeOfWorking}
+          type="text"
+          name="description"
+          value={newOrder.description}
           onChange={handleChange}
-          placeholder="Czas pracy"
+          placeholder="Opis"
           step="0.1"
         />
-        <button onClick={handleAddTimesheet}>Dodaj</button>
+        <button onClick={handleAddOrder}>Dodaj</button>
       </div>
       {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
 
-export default AddTimesheet;
+export default AddOrder;

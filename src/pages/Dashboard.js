@@ -3,10 +3,12 @@ import Sidebar from "../components/SidebarComponents/Sidebar";
 import "../styles/Dashboard.css";
 import GoogleCalendar from "../components/SidebarComponents/GoogleCalendar";
 import EmployeeData from "../components/SidebarComponents/EmployeeData";
+import CustomerData from "../components/SidebarComponents/CustomerData";
 import TimesheetData from "../components/SidebarComponents/TimesheetData";
 import Contact from "../components/SidebarComponents/Contact";
 import InvoicesClient from "../components/SidebarComponents/InvoicesClient";
 import InvoicesCosts from "../components/SidebarComponents/InvoicesCosts";
+import OrderListData from "../components/SidebarComponents/OrderListData";
 
 function Dashboard({ setIsAuthenticated }) {
   const [activeComponent, setActiveComponent] = useState("KALENDARZ");
@@ -30,6 +32,7 @@ function Dashboard({ setIsAuthenticated }) {
         return (
           <div className="list">
             <h1>Lista Zleceń</h1>
+            <OrderListData />
           </div>
         );
       case "invoices":
@@ -55,10 +58,10 @@ function Dashboard({ setIsAuthenticated }) {
             <EmployeeData />
           </div>
         );
-      case "raports":
+      case "customer-data":
         return (
           <div className="list">
-            <h1>Raporty</h1>
+            <CustomerData />
           </div>
         );
       case "contact":

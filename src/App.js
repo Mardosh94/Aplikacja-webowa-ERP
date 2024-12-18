@@ -58,6 +58,20 @@ const App = () => {
     if (loginData.password.length < 6) {
       newErrors.password = "Hasło musi mieć co najmniej 6 znaków.";
     }
+    if (!/[A-Z]/.test(loginData.password)) {
+      newErrors.password =
+        "Hasło musi zawierać co najmniej jedną wielką literę.";
+    }
+    if (!/[0-9]/.test(loginData.password)) {
+      newErrors.password = "Hasło musi zawierać co najmniej jedną cyfrę.";
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>-]/.test(loginData.password)) {
+      newErrors.password =
+        "Hasło musi zawierać co najmniej jeden znak specjalny.";
+    }
+    if (/\s/.test(loginData.password)) {
+      newErrors.password = "Hasło nie może zawierać białych znaków.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

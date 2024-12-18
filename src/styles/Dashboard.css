@@ -25,7 +25,30 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+select {
+  width: flex;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-left: 20px;
+}
 
+select:focus {
+  border-color: #3498db; /* Kolor ramki przy focus */
+  outline: none;
+}
+
+option {
+  padding: 10px;
+}
+input {
+  width: flex;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
 .button-logout {
   background-color: #3498db;
   color: white;
@@ -50,14 +73,16 @@ button:hover {
   width: 100%;
 }
 
-.employee-table {
+.employee-table,
+.customer-table {
   width: 100%; /* Rozciąga tabelę na całą szerokość ekranu */
   table-layout: fixed; /* Zapewnia równomierne rozłożenie szerokości komórek */
   margin-top: 10px;
   margin-left: 20px;
 }
 
-.employee-table {
+.employee-table,
+.customer-table {
   border-spacing: 10px;
   padding: 30px;
   border: 1px solid;
@@ -67,12 +92,14 @@ button:hover {
   width: auto;
 }
 
-.employee-table th {
+.employee-table th,
+.customer-table th {
   padding-bottom: 10px;
   border-bottom: 1px solid;
 }
 
-.employee-table td {
+.employee-table td,
+.customer-table td {
   padding-bottom: 10px;
   padding: 10px;
   text-align: left;
@@ -227,7 +254,8 @@ form button:hover {
   justify-content: flex-end; /* Przesuwa przyciski na prawą stronę */
   gap: 10px; /* Ustawia odstęp między przyciskami */
 }
-.add-employee {
+.add-employee,
+.add-customer {
   width: 100%; /* Zapewnia, że formularz będzie mieścił się w obrębie ekranu */
   padding: 20px;
   box-sizing: border-box;

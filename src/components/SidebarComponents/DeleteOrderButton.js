@@ -1,5 +1,5 @@
-const deleteTimesheetButton = (employeeId, timesheetId) => {
-  return fetch(`/Employees/${employeeId}/Timesheets/${timesheetId}`, {
+const deleteOrderButton = (customerId, orderId) => {
+  return fetch(`/Customers/${customerId}/Timesheets/${orderId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -18,4 +18,4 @@ const deleteTimesheetButton = (employeeId, timesheetId) => {
     });
 };
 
-export default deleteTimesheetButton;
+export default deleteOrderButton;
