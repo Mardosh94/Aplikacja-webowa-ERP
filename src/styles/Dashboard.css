@@ -85,24 +85,42 @@ button:hover {
 .customer-table {
   border-spacing: 10px;
   padding: 30px;
-  border: 1px solid;
+  border: 1px solid #ccc;
   border-radius: 10px;
   background-color: white;
   color: black;
-  width: auto;
+  width: 95%; /* Zmieniono na 100%, aby tabela zajmowała całą szerokość kontenera */
+  table-layout: fixed; /* Ustawienie stałej szerokości komórek, aby tabela była bardziej stabilna */
+  box-sizing: border-box; /* Umożliwia wliczenie paddingu i border w szerokość */
+  overflow-x: auto; /* Umożliwia przewijanie w poziomie, gdy zawartość jest za szeroka */
 }
 
 .employee-table th,
 .customer-table th {
-  padding-bottom: 10px;
-  border-bottom: 1px solid;
+  padding-bottom: 15px;
+  padding-top: 15px; /* Dodane wypełnienie na górze nagłówków */
+  border-bottom: 1px solid #ccc;
+  text-align: left; /* Wyśrodkowanie tekstu w nagłówkach */
 }
 
 .employee-table td,
 .customer-table td {
-  padding-bottom: 10px;
   padding: 10px;
-  text-align: left;
+  padding-bottom: 15px;
+  text-align: left; /* Wyśrodkowanie tekstu w komórkach */
+  word-wrap: break-word; /* Zapobiega zawijaniu tekstu w komórkach */
+}
+
+/* Styl dla komórek tabeli */
+.employee-table tr:nth-child(even),
+.customer-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Zmienny kolor tła dla parzystych wierszy */
+}
+
+/* Styl dla hover na wierszach */
+.employee-table tr:hover,
+.customer-table tr:hover {
+  background-color: #f1f1f1; /* Zmiana tła przy najechaniu */
 }
 .contact-section {
   width: 100%;
@@ -132,25 +150,26 @@ button:hover {
   bottom: 10px;
   top: 25px;
   padding: 30px;
-  border: 1px solid;
+  margin-top: 30px;
   border-radius: 10px;
   background-color: white;
   color: black;
   position: relative;
-  width: 40%;
+  width: 91%;
   float: left;
 }
 .invoicesTables1 th,
 .invoicesTables2 th {
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   border-bottom: 1px solid;
+  position: relative;
 }
 
 .invoicesTables1 td,
 .invoicesTables2 td {
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   padding: 10px;
-  text-align: left;
+  text-align: center;
 }
 .timesheet {
   color: black;
@@ -176,6 +195,7 @@ button:hover {
 .delete-button:hover {
   background-color: 2980b9;
 }
+
 .input-row {
   display: flex;
   flex-wrap: wrap; /* Dzięki temu elementy formularza mogą się układać w nowej linii, gdy brakuje miejsca */
@@ -185,7 +205,7 @@ button:hover {
 
 .input-row input {
   flex: 10%; /* Każde pole ma 45% szerokości, ale może się zmieniać w zależności od dostępnej przestrzeni */
-  max-width: 100%; /* Zapewnia, że pole nie wyjdzie poza ekran */
+  max-width: 95%; /* Zapewnia, że pole nie wyjdzie poza ekran */
   box-sizing: border-box; /* Zapobiega rozszerzaniu się elementu poza ustaloną szerokość */
   padding: 7px;
 }
@@ -266,4 +286,56 @@ form button:hover {
   right: 10px;
   font-size: 24px;
   cursor: pointer;
+}
+.invoicesChange,
+button {
+  display: flex;
+  margin: 10px;
+  margin-left: 15px;
+}
+.inputTables {
+  border-spacing: 10px;
+  margin-left: 30px;
+  bottom: 10px;
+  top: 25px;
+  padding: 30px;
+  border: none;
+  border-radius: 10px;
+  background-color: #0a0811;
+  color: white;
+  position: relative;
+  width: 95%;
+  float: left;
+}
+.inputTables th {
+  padding-bottom: 15px;
+  border-bottom: 1px solid;
+}
+
+.inputTables td {
+  padding-bottom: 15px;
+  padding: 10px;
+  text-align: left;
+}
+table {
+  width: 100%; /* Rozciąga tabelę na całą szerokość kontenera */
+  table-layout: fixed; /* Ustala stałą szerokość komórek w tabeli */
+}
+
+th,
+td {
+  padding: 10px; /* Dodatkowe wypełnienie w komórkach */
+  text-align: center; /* Wyśrodkowanie tekstu w komórkach */
+}
+
+@media screen and (max-width: 768px) {
+  .invoicesTables1,
+  .invoicesTables2 {
+    padding: 15px; /* Mniejsze wypełnienie na urządzeniach mobilnych */
+  }
+
+  th,
+  td {
+    padding: 8px; /* Mniejsze padding w komórkach na mniejszych ekranach */
+  }
 }

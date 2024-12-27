@@ -26,7 +26,7 @@ const App = () => {
 
   const [errors, setErrors] = useState({});
   const [showRegister, setShowRegister] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");

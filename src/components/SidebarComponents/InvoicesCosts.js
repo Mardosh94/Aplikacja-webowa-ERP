@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import DeleteInvoiceButton from "./DeleteInvoiceButton";
 import "../../styles/Dashboard.css";
 
 const InvoicesCosts = () => {
   const [faktury, setFaktury] = useState([]);
 
   useEffect(() => {
-    fetch("https://67121aba4eca2acdb5f71902.mockapi.io/faktury_koszty")
+    fetch("/Invoices/getByType/2")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas pobierania danych");
@@ -20,6 +21,11 @@ const InvoicesCosts = () => {
       });
   }, []);
 
+  const handleDeleteSuccess = (id) => {
+    const updatedInvoices = faktury.filter((invoice) => invoice.id !== id);
+    setFaktury(updatedInvoices);
+  };
+
   return (
     <div>
       <h1 style={{ color: "#3498db" }}>Faktury Koszty</h1>
@@ -27,22 +33,41 @@ const InvoicesCosts = () => {
         <thead>
           <tr>
             <th>Numer faktury</th>
-            <th>Klient</th>
             <th>Data wystawienia</th>
             <th>Termin zapłaty</th>
             <th>Kwota</th>
             <th>Status</th>
+            <th>Zapłacono</th>
+            <th>Akcja</th>
           </tr>
         </thead>
         <tbody>
-          {faktury.map((faktura) => (
-            <tr key={faktura.id}>
-              <td>{faktura.numer_faktury}</td>
-              <td>{faktura.nazwa_klienta}</td>
-              <td>{faktura.data_wystawienia}</td>
-              <td>{faktura.termin_zaplaty}</td>
-              <td>{faktura.kwota} PLN</td>
-              <td>{faktura.status}</td>
+          {faktury.map((invoice) => (
+            <tr key={invoice.id}>
+              <td>{invoice.invoiceNumber}</td>
+              <td>
+                {invoice.invoiceDate
+                  ? new Date(invoice.invoiceDate).toLocaleDateString()
+                  : "Brak danych"}
+              </td>
+              <td>
+                {invoice.dueDate
+                  ? new Date(invoice.dueDate).toLocaleDateString()
+                  : "Brak danych"}
+              </td>
+              <td>{invoice.amount} PLN</td>
+              <td>{invoice.isPayed ? "Opłacona" : "Nieopłacona"}</td>
+              <td>
+                {invoice.paymentDate
+                  ? new Date(invoice.paymentDate).toLocaleDateString()
+                  : ""}
+              </td>
+              <td>
+                <DeleteInvoiceButton
+                  invoiceId={invoice.id}
+                  onDeleteSuccess={handleDeleteSuccess}
+                />
+              </td>
             </tr>
           ))}
         </tbody>

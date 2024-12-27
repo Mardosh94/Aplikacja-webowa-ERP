@@ -9,9 +9,16 @@ import Contact from "../components/SidebarComponents/Contact";
 import InvoicesClient from "../components/SidebarComponents/InvoicesClient";
 import InvoicesCosts from "../components/SidebarComponents/InvoicesCosts";
 import OrderListData from "../components/SidebarComponents/OrderListData";
+import AddInvoice from "../components/SidebarComponents/AddInvoice";
 
 function Dashboard({ setIsAuthenticated }) {
   const [activeComponent, setActiveComponent] = useState("KALENDARZ");
+  const [activeTab, setActiveTab] = useState("client"); // Stan przechowujący aktywną zakładkę
+
+  // Funkcja do zmiany aktywnej zakładki
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -38,11 +45,32 @@ function Dashboard({ setIsAuthenticated }) {
       case "invoices":
         return (
           <div>
-            <div className="invoicesTables1">
-              <InvoicesClient />
+            <div className="invoicesChange">
+              <button
+                className="chooseButoon"
+                onClick={() => handleTabChange("client")}
+              >
+                Dochód
+              </button>
+              <button
+                className="chooseButoon"
+                onClick={() => handleTabChange("costs")}
+              >
+                Koszty
+              </button>
             </div>
-            <div className="invoicesTables2">
-              <InvoicesCosts />
+            <div>
+              <AddInvoice activeTab={activeTab} />
+              {activeTab === "client" && (
+                <div className="invoicesTables1">
+                  <InvoicesClient />
+                </div>
+              )}
+              {activeTab === "costs" && (
+                <div className="invoicesTables2">
+                  <InvoicesCosts />
+                </div>
+              )}
             </div>
           </div>
         );
