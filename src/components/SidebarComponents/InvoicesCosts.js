@@ -6,7 +6,18 @@ const InvoicesCosts = () => {
   const [faktury, setFaktury] = useState([]);
 
   useEffect(() => {
-    fetch("/Invoices/getByType/2")
+    const token = localStorage.getItem("authToken"); // Pobranie tokena z localStorage
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
+    fetch("/Invoices/getByType/2", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Dodanie tokena w nagłówkach
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas pobierania danych");

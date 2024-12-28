@@ -8,8 +8,16 @@ const CustomerData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customerToEdit, setCustomerToEdit] = useState(null);
 
+  const token = localStorage.getItem("authToken"); // Pobranie tokena z localStorage
+
   const fetchCustomers = () => {
-    fetch(`/Customers/getAll`) //
+    fetch(`/Customers/getAll`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka Authorization
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas pobierania danych");
@@ -26,12 +34,15 @@ const CustomerData = () => {
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  });
 
   const handleDeleteCustomer = (id) => {
     fetch(`/Customers/delete/${id}`, {
-      //
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka Authorization
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -54,6 +65,7 @@ const CustomerData = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka Authorization
       },
       body: JSON.stringify(newCustomer),
     })
@@ -61,7 +73,7 @@ const CustomerData = () => {
         if (response.status === 201) {
           return response.json();
         }
-        throw new Error("Błąd podczas dodawania konrahenta");
+        throw new Error("Błąd podczas dodawania kontrahenta");
       })
       .then((createdCustomer) => {
         setCustomer((prev) => [...prev, createdCustomer]);
@@ -72,9 +84,14 @@ const CustomerData = () => {
   };
 
   const handleSaveEditedCustomer = (editedCustomer) => {
+    const token = localStorage.getItem("authToken"); // Pobranie tokena z localStorage
+
     fetch(`/Customers/update?id=${editedCustomer.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie tokena do nagłówka Authorization
+      },
       body: JSON.stringify({
         companyName: editedCustomer.companyName,
         firstName: editedCustomer.firstName,

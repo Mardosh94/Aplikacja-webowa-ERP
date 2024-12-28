@@ -1,71 +1,91 @@
 import React, { useState, useEffect } from "react";
-import deleteTimesheetEntry from "../SidebarComponents/DeleteTimesheetButton";
+import deleteOrderEntry from "../SidebarComponents/DeleteOrderButton";
 import AddOrder from "./AddOrder";
 
 function OrderListData() {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [workLog, setWorkLog] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    fetch("Customers/getAll")
-      .then((response) => response.json())
-      .then((data) => setCustomers(data))
-      .catch((error) =>
-        console.error("Błąd przy pobieraniu kontrahentów:", error)
-      );
-  }, []);
+  const token = localStorage.getItem("authToken");
 
+  // Fetch list of customers
   useEffect(() => {
-    if (selectedCustomerId) {
-      setIsLoading(true);
-      setError(null);
+    fetch("/Customers/getAll", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => setCustomers(data || []))
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu pracowników:", error);
+        setError("Nie udało się załadować listy kontrahentów.");
+      });
+  }, [token]);
 
-      fetch(`/Customers/${selectedCustomerId}/Orders`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (!data || Object.keys(data).length === 0) {
-            console.warn("Brak danych dla wybranego kontrahenta.");
-            setWorkLog([]);
-          } else {
-            setWorkLog(data);
-          }
-        })
-        .catch((error) => {
-          console.error("Błąd przy pobieraniu listy zamównień:", error);
-          setError("Nie udało się pobrać danych. Spróbuj ponownie.");
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setWorkLog(null);
+  // Fetch orders for selected customer
+  useEffect(() => {
+    if (!selectedCustomerId) {
+      setOrders([]);
+      return;
     }
-  }, [selectedCustomerId]);
 
+    setIsLoading(true);
+    setError(null);
+
+    fetch(`/Customers/${selectedCustomerId}/Orders`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setOrders(data || []);
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu listy zamówień:", error);
+        setError("Nie udało się pobrać danych zamówień.");
+      })
+      .finally(() => setIsLoading(false));
+  }, [selectedCustomerId, token]);
+
+  // Delete order
   const handleDelete = (index) => {
-    if (
-      !selectedCustomerId ||
-      !workLog ||
-      index < 0 ||
-      index >= workLog.length
-    ) {
+    if (!selectedCustomerId || !orders || index < 0 || index >= orders.length) {
       console.error("Nieprawidłowe dane do usunięcia.");
       return;
     }
 
-    const orderId = workLog[index]?.id;
+    const orderId = orders[index]?.id;
 
-    deleteTimesheetEntry(selectedCustomerId, orderId)
+    deleteOrderEntry(selectedCustomerId, orderId)
       .then(() => {
-        console.log(`Zamównienie o ID ${orderId} zostało usunięte.`);
-        // Po usunięciu odśwież listę timesheetów
-        fetch(`/Customers/${selectedCustomerId}/Orders`)
+        console.log(`Zamówienie o ID ${orderId} zostało usunięte.`);
+        // Refresh order list
+        fetch(`/Customers/${selectedCustomerId}/Orders`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
@@ -73,21 +93,21 @@ function OrderListData() {
             return response.json();
           })
           .then((data) => {
-            setWorkLog(data || []);
+            setOrders(data || []);
           })
           .catch((error) => {
-            console.error("Błąd przy ponownym pobieraniu ewidencji:", error);
-            setError("Nie udało się odświeżyć danych. Spróbuj ponownie.");
+            console.error("Błąd przy ponownym pobieraniu danych:", error);
+            setError("Nie udało się odświeżyć danych zamówień.");
           });
       })
       .catch((error) => {
         console.error("Błąd podczas usuwania:", error);
-        setError("Nie udało się usunąć wpisu. Spróbuj ponownie.");
+        setError("Nie udało się usunąć zamówienia.");
       });
   };
 
   const addOrder = (newOrder) => {
-    setWorkLog((prevLogs) => [...prevLogs, newOrder]);
+    setOrders((prevOrders) => [...prevOrders, newOrder]);
   };
 
   return (
@@ -98,8 +118,8 @@ function OrderListData() {
       >
         <option value="" disabled>
           {customers.length === 0
-            ? "Brak dostępnych pracowników"
-            : "Wybierz pracownika..."}
+            ? "Brak dostępnych kontrahentów"
+            : "Wybierz kontrahenta..."}
         </option>
         {customers.map((customer) => (
           <option key={customer.id} value={customer.id}>
@@ -110,19 +130,16 @@ function OrderListData() {
 
       {selectedCustomerId && (
         <div>
-          {selectedCustomerId && (
-            <AddOrder
-              selectedEmployeeId={selectedCustomerId}
-              onAddTimesheet={addOrder}
-            />
-          )}
+          <AddOrder
+            selectedCustomerId={selectedCustomerId}
+            onAddOrder={addOrder}
+          />
           {isLoading ? (
             <p className="message loading">Ładowanie danych...</p>
           ) : error ? (
             <p className="message error">{error}</p>
-          ) : workLog && workLog.length > 0 ? (
+          ) : orders && orders.length > 0 ? (
             <table className="invoicesTables1">
-              {/* Do zmiany className */}
               <thead>
                 <tr>
                   <th>Data</th>
@@ -132,15 +149,15 @@ function OrderListData() {
                 </tr>
               </thead>
               <tbody>
-                {workLog.map((log, index) => (
+                {orders.map((order, index) => (
                   <tr key={index}>
                     <td>
-                      {log.orderDate
-                        ? new Date(log.orderDate).toLocaleDateString()
+                      {order.orderDate
+                        ? new Date(order.orderDate).toLocaleDateString()
                         : "Brak danych"}
                     </td>
-                    <td>{log.description}</td>
-                    <td>{log.status}</td>
+                    <td>{order.description}</td>
+                    <td>{order.status}</td>
                     <td>
                       <button onClick={() => handleDelete(index)}>Usuń</button>
                     </td>

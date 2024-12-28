@@ -8,15 +8,17 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
   });
 
   const [error, setError] = useState("");
+  const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    // Walidacja pola timeOfWorking - upewnienie się, że to liczba
     if (name === "timeOfWorking") {
       const parsedValue = parseFloat(value);
       setNewTimesheet((prevState) => ({
         ...prevState,
-        [name]: isNaN(parsedValue) ? "" : parsedValue,
+        [name]: isNaN(parsedValue) || parsedValue < 0 ? "" : parsedValue,
       }));
     } else {
       setNewTimesheet((prevState) => ({
@@ -39,11 +41,12 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(newTimesheet),
         }
       );
-      console.log(newTimesheet);
+
       if (!response.ok) {
         const errorText = await response.text();
         setError(`Błąd serwera: ${response.status}. ${errorText}`);
@@ -53,28 +56,25 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
-        console.log("Odpowiedź serwera (JSON):", data);
-
         if (response.status === 201) {
-          onAddTimesheet(data);
-          setNewTimesheet({ date: "", timeOfWorking: "" });
-          setError("");
+          onAddTimesheet(data); // Przekazanie danych do nadrzędnego komponentu
+          setNewTimesheet({ date: "", timeOfWorking: "" }); // Reset formularza
+          setError(""); // Reset błędu
         } else {
           setError(data.message || "Nie udało się dodać wpisu.");
         }
       } else {
         const text = await response.text();
-        console.log("Odpowiedź serwera (tekstowa):", text);
         setError(`Odpowiedź serwera: ${text}`);
       }
     } catch (err) {
-      console.error("Błąd podczas dodawania wpisu:", err);
       setError("Wystąpił błąd podczas dodawania ewidencji czasu pracy.");
+      console.error("Błąd podczas dodawania wpisu:", err);
     }
   };
 
   return (
-    <div className="add-employee">
+    <div className="add-timesheet">
       <h2>Dodaj czas pracy</h2>
       <div className="input-row">
         <input
@@ -82,6 +82,7 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
           name="date"
           value={newTimesheet.date}
           onChange={handleChange}
+          required
         />
         <input
           type="number"
@@ -90,6 +91,8 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
           onChange={handleChange}
           placeholder="Czas pracy"
           step="0.1"
+          min="0" // Zapewnienie, że czas pracy nie będzie ujemny
+          required
         />
         <button onClick={handleAddTimesheet}>Dodaj</button>
       </div>

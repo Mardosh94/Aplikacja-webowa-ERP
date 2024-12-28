@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "../../styles/Dashboard.css";
 
-const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
+const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
+
+const AddOrder = ({ selectedCustomerId, onAddOrder }) => {
   const [newOrder, setNewOrder] = useState({
     orderDate: "",
     description: "",
@@ -11,19 +13,10 @@ const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "timeOfWorking") {
-      const parsedValue = parseFloat(value);
-      setNewOrder((prevState) => ({
-        ...prevState,
-        [name]: isNaN(parsedValue) ? "" : parsedValue,
-      }));
-    } else {
-      setNewOrder((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setNewOrder((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleAddOrder = async () => {
@@ -33,14 +26,17 @@ const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
     }
 
     try {
-      const response = await fetch(`/Customers/${selectedCusotmerId}/Oreders`, {
+      const response = await fetch(`/Customers/${selectedCustomerId}/Orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(newOrder),
       });
-      console.log(newOrder);
+
+      console.log("Nowe zamówienie:", newOrder);
+
       if (!response.ok) {
         const errorText = await response.text();
         setError(`Błąd serwera: ${response.status}. ${errorText}`);
@@ -54,19 +50,19 @@ const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
 
         if (response.status === 201) {
           onAddOrder(data);
-          setNewOrder({ date: "", orderDate: "", status: "" });
+          setNewOrder({ orderDate: "", description: "" });
           setError("");
         } else {
-          setError(data.message || "Nie udało się dodać wpisu.");
+          setError(data.message || "Nie udało się dodać zamówienia.");
         }
       } else {
         const text = await response.text();
         console.log("Odpowiedź serwera (tekstowa):", text);
-        setError(`Odpowiedź serwera: ${text}`);
+        setError(`Nieoczekiwana odpowiedź serwera: ${text}`);
       }
     } catch (err) {
-      console.error("Błąd podczas dodawania wpisu:", err);
-      setError("Wystąpił błąd podczas dodawania ewidencji czasu pracy.");
+      console.error("Błąd podczas dodawania zamówienia:", err);
+      setError("Wystąpił błąd podczas dodawania zamówienia. Spróbuj ponownie.");
     }
   };
 
@@ -76,8 +72,8 @@ const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
       <div className="input-row">
         <input
           type="date"
-          name="date"
-          value={newOrder.OrderDate}
+          name="orderDate"
+          value={newOrder.orderDate}
           onChange={handleChange}
         />
         <input
@@ -86,7 +82,6 @@ const AddOrder = ({ selectedCusotmerId, onAddOrder }) => {
           value={newOrder.description}
           onChange={handleChange}
           placeholder="Opis"
-          step="0.1"
         />
         <button onClick={handleAddOrder}>Dodaj</button>
       </div>

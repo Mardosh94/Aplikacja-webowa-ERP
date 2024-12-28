@@ -26,11 +26,11 @@ const App = () => {
 
   const [errors, setErrors] = useState({});
   const [showRegister, setShowRegister] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
+    const saveToken = localStorage.getItem("authToken");
+    if (saveToken) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -89,7 +89,8 @@ const App = () => {
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem("authToken", data.Token);
+          localStorage.setItem("authToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
           setIsAuthenticated(true);
           console.log("Dane do logowania:", loginData);
         } else {

@@ -9,15 +9,23 @@ function TimesheetData() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
+
   // Pobranie listy pracowników
   useEffect(() => {
-    fetch("Employees/getAll")
+    fetch("Employees/getAll", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie tokena w nagłówku
+      },
+    })
       .then((response) => response.json())
       .then((data) => setEmployees(data))
       .catch((error) =>
         console.error("Błąd przy pobieraniu pracowników:", error)
       );
-  }, []);
+  }, [token]);
 
   // Pobranie timesheetów dla wybranego pracownika
   useEffect(() => {
@@ -25,7 +33,13 @@ function TimesheetData() {
       setIsLoading(true);
       setError(null);
 
-      fetch(`/Employees/${selectedEmployeeId}/Timesheets`)
+      fetch(`/Employees/${selectedEmployeeId}/Timesheets`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Dodanie tokena w nagłówku
+        },
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -48,7 +62,7 @@ function TimesheetData() {
     } else {
       setWorkLog(null);
     }
-  }, [selectedEmployeeId]);
+  }, [selectedEmployeeId, token]);
 
   // Usuwanie timesheetu i odświeżanie listy
   const handleDelete = (index) => {
@@ -68,7 +82,13 @@ function TimesheetData() {
       .then(() => {
         console.log(`Timesheet o ID ${timesheetId} został usunięty.`);
         // Po usunięciu odśwież listę timesheetów
-        fetch(`/Employees/${selectedEmployeeId}/Timesheets`)
+        fetch(`/Employees/${selectedEmployeeId}/Timesheets`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Dodanie tokena w nagłówku
+          },
+        })
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);

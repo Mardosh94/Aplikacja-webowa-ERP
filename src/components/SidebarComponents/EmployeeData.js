@@ -8,38 +8,63 @@ const EmployeeData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [employeeToEdit, setEmployeeToEdit] = useState(null);
 
-  const fetchEmployees = () => {
-    fetch(`/Employees/getAll`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Błąd podczas pobierania danych");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEmployee(data);
-      })
-      .catch((error) => {
-        console.error("Błąd podczas pobierania danych:", error);
+  const token = localStorage.getItem("authToken"); // Pobierz token z localStorage
+
+  const fetchEmployees = async () => {
+    try {
+      if (!token) {
+        throw new Error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      }
+
+      const response = await fetch(`/Employees/getAll`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
+          "Content-Type": "application/json",
+        },
       });
+
+      if (response.status === 401) {
+        throw new Error("Nieautoryzowany dostęp. Zaloguj się ponownie.");
+      }
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas pobierania danych");
+      }
+
+      const data = await response.json();
+      setEmployee(data); // Aktualizacja stanu
+    } catch (error) {
+      console.error("Błąd podczas pobierania danych:", error.message);
+    }
   };
 
   useEffect(() => {
     fetchEmployees();
-  }, []);
+  });
 
   const handleDeleteEmployee = (id) => {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
     fetch(`/Employees/delete/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
+        "Content-Type": "application/json",
+      },
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas usuwania pracownika");
         }
+        // Usuń pracownika z listy po udanym usunięciu na serwerze
         setEmployee((prev) => prev.filter((employee) => employee.id !== id));
       })
       .catch((error) => {
-        console.error("Błąd podczas usuwania pracownika:", error);
+        console.error("Błąd podczas usuwania pracownika:", error.message);
       });
   };
 
@@ -49,10 +74,16 @@ const EmployeeData = () => {
   };
 
   const handleAddNewEmployee = (newEmployee) => {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
     fetch(`/Employees/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
       },
       body: JSON.stringify(newEmployee),
     })
@@ -66,14 +97,22 @@ const EmployeeData = () => {
         setEmployee((prev) => [...prev, createdEmployee]);
       })
       .catch((error) => {
-        console.error("Błąd podczas dodawania pracownika:", error);
+        console.error("Błąd podczas dodawania pracownika:", error.message);
       });
   };
 
   const handleSaveEditedEmployee = (editedEmployee) => {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
     fetch(`/Employees/update?id=${editedEmployee.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         firstName: editedEmployee.firstName,
         lastName: editedEmployee.lastName,
@@ -108,13 +147,13 @@ const EmployeeData = () => {
         setIsModalOpen(false);
       })
       .catch((error) => {
-        console.error("Błąd podczas zapisywania danych:", error);
+        console.error("Błąd podczas zapisywania danych:", error.message);
       });
   };
 
   return (
     <div>
-      <h1>Lista pracowników</h1>
+      <h1> Lista pracowników</h1>
       <AddEmployee onAddEmployee={handleAddNewEmployee} />
       <table className="employee-table">
         <thead>
