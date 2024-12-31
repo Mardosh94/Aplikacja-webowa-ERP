@@ -8,7 +8,6 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
   });
 
   const [error, setError] = useState("");
-  const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +34,7 @@ const AddTimesheet = ({ selectedEmployeeId, onAddTimesheet }) => {
     }
 
     try {
+      const token = localStorage.getItem("authToken");
       const response = await fetch(
         `/Employees/${selectedEmployeeId}/Timesheets`,
         {

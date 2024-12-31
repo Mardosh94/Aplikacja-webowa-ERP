@@ -2,8 +2,13 @@ const DeleteInvoiceButton = ({ invoiceId, onDeleteSuccess }) => {
   const handleDelete = () => {
     const confirmed = window.confirm("Czy na pewno chcesz usunąć tę fakturę?");
     if (confirmed) {
+      const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
       fetch(`/Invoices/delete/${invoiceId}`, {
-        method: "DELETE", // Zakładając, że masz odpowiedni endpoint w backendzie do usuwania
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       })
         .then((response) => {
           if (!response.ok) {

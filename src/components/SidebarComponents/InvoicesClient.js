@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import DeleteInvoiceButton from "./DeleteInvoiceButton";
 import "../../styles/Dashboard.css";
 
-const InvoicesCosts = () => {
+const InvoicesClient = () => {
   const [faktury, setFaktury] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Pobranie tokena z localStorage
+    const token = localStorage.getItem("authToken");
     if (!token) {
       console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
       return;
@@ -15,7 +15,7 @@ const InvoicesCosts = () => {
     fetch("/Invoices/getByType/1", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Dodanie tokena w nagłówkach
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -38,7 +38,7 @@ const InvoicesCosts = () => {
   };
 
   return (
-    <div>
+    <div className="table-invoice">
       <h1 style={{ color: "#3498db" }}>Faktury dochodowe</h1>
       <table>
         <thead>
@@ -87,4 +87,4 @@ const InvoicesCosts = () => {
   );
 };
 
-export default InvoicesCosts;
+export default InvoicesClient;

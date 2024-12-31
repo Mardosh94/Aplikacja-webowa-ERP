@@ -5,17 +5,15 @@ import GoogleCalendar from "../components/SidebarComponents/GoogleCalendar";
 import EmployeeData from "../components/SidebarComponents/EmployeeData";
 import CustomerData from "../components/SidebarComponents/CustomerData";
 import TimesheetData from "../components/SidebarComponents/TimesheetData";
-import Contact from "../components/SidebarComponents/Contact";
 import InvoicesClient from "../components/SidebarComponents/InvoicesClient";
 import InvoicesCosts from "../components/SidebarComponents/InvoicesCosts";
 import OrderListData from "../components/SidebarComponents/OrderListData";
 import AddInvoice from "../components/SidebarComponents/AddInvoice";
 
 function Dashboard({ setIsAuthenticated }) {
-  const [activeComponent, setActiveComponent] = useState("KALENDARZ");
-  const [activeTab, setActiveTab] = useState("client"); // Stan przechowujący aktywną zakładkę
+  const [activeComponent, setActiveComponent] = useState("calendar");
+  const [activeTab, setActiveTab] = useState("client");
 
-  // Funkcja do zmiany aktywnej zakładki
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
@@ -31,7 +29,6 @@ function Dashboard({ setIsAuthenticated }) {
       case "present-list":
         return (
           <div className="list">
-            <h1>Lista obecności</h1>
             <TimesheetData />
           </div>
         );
@@ -62,12 +59,12 @@ function Dashboard({ setIsAuthenticated }) {
             <div>
               <AddInvoice activeTab={activeTab} />
               {activeTab === "client" && (
-                <div className="invoicesTables1">
+                <div>
                   <InvoicesClient />
                 </div>
               )}
               {activeTab === "costs" && (
-                <div className="invoicesTables2">
+                <div>
                   <InvoicesCosts />
                 </div>
               )}
@@ -90,18 +87,6 @@ function Dashboard({ setIsAuthenticated }) {
         return (
           <div className="list">
             <CustomerData />
-          </div>
-        );
-      case "contact":
-        return (
-          <div className="contact-dashboard">
-            <Contact />
-          </div>
-        );
-      case "group":
-        return (
-          <div className="list">
-            <h1>Grupy</h1>
           </div>
         );
       default:

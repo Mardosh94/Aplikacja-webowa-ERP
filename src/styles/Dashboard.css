@@ -31,7 +31,6 @@ select {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
-  margin-left: 20px;
 }
 
 select:focus {
@@ -53,12 +52,13 @@ input {
   background-color: #3498db;
   color: white;
   border: none;
+  position: fixed;
+  bottom: 0;
   border-radius: 8px;
   padding: 10px 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  position: absolute; /* Ustawienie względem sidebaru */
-  bottom: 60px; /* Dystans od dołu */
+  transition: background-color 0.5s ease;
+  bottom: 20px;
 }
 
 button:hover {
@@ -74,15 +74,16 @@ button:hover {
 }
 
 .employee-table,
-.customer-table {
+.customer-table,
+.table-invoice {
   width: 100%; /* Rozciąga tabelę na całą szerokość ekranu */
   table-layout: fixed; /* Zapewnia równomierne rozłożenie szerokości komórek */
   margin-top: 10px;
-  margin-left: 20px;
 }
 
 .employee-table,
-.customer-table {
+.customer-table,
+.table-invoice {
   border-spacing: 10px;
   padding: 30px;
   border: 1px solid #ccc;
@@ -96,7 +97,8 @@ button:hover {
 }
 
 .employee-table th,
-.customer-table th {
+.customer-table th,
+.table-invoice th {
   padding-bottom: 15px;
   padding-top: 15px; /* Dodane wypełnienie na górze nagłówków */
   border-bottom: 1px solid #ccc;
@@ -104,7 +106,8 @@ button:hover {
 }
 
 .employee-table td,
-.customer-table td {
+.customer-table td,
+.table-invoice td {
   padding: 10px;
   padding-bottom: 15px;
   text-align: left; /* Wyśrodkowanie tekstu w komórkach */
@@ -146,23 +149,21 @@ button:hover {
 .invoicesTables1,
 .invoicesTables2 {
   border-spacing: 10px;
-  margin-left: 30px;
   bottom: 10px;
-  top: 25px;
+  display: 1;
   padding: 30px;
   margin-top: 30px;
   border-radius: 10px;
   background-color: white;
   color: black;
   position: relative;
-  width: 91%;
+  width: 100%;
   float: left;
 }
 .invoicesTables1 th,
 .invoicesTables2 th {
   padding-bottom: 15px;
   border-bottom: 1px solid;
-  position: relative;
 }
 
 .invoicesTables1 td,
@@ -276,8 +277,7 @@ form button:hover {
 }
 .add-employee,
 .add-customer {
-  width: 100%; /* Zapewnia, że formularz będzie mieścił się w obrębie ekranu */
-  padding: 20px;
+  width: 100%;
   box-sizing: border-box;
 }
 .close {
@@ -289,14 +289,12 @@ form button:hover {
 }
 .invoicesChange,
 button {
-  margin-left: 30px;
+  margin-left: 10px;
 }
 .chooseButoon {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .inputTables {
-  border-spacing: 5%;
-  margin-left: 30px;
   bottom: 5%;
   border: none;
   border-radius: 10px;
@@ -308,10 +306,8 @@ button {
 }
 .inputTables th {
   padding-bottom: 15px;
+  margin-top: 15px;
   border-bottom: 1px solid;
-}
-h1 {
-  margin-left: 20px;
 }
 
 .inputTables td {
@@ -325,6 +321,11 @@ table {
 th,
 td {
   text-align: center;
+}
+.total-hours {
+  position: fixed;
+  bottom: 0;
+  left: 10;
 }
 
 @media screen and (max-width: 768px) {

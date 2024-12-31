@@ -134,8 +134,8 @@ const CustomerData = () => {
 
   return (
     <div>
-      <h1>Lista kontrahentów</h1>
       <AddCustomer onAddCustomer={handleAddNewCustomer} />
+      <h1>Lista kontrahentów</h1>
       <table className="customer-table">
         <thead>
           <tr>

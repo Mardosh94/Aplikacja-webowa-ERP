@@ -38,7 +38,7 @@ const InvoicesCosts = () => {
   };
 
   return (
-    <div>
+    <div className="table-invoice">
       <h1 style={{ color: "#3498db" }}>Faktury Koszty</h1>
       <table>
         <thead>

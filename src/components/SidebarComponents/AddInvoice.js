@@ -13,8 +13,8 @@ const AddInvoice = ({ activeTab }) => {
     paymentDate: "",
   });
 
-  const [setError] = useState("");
-  const [setSuccess] = useState("");
+  const [error, setError] = useState(""); // Poprawne użycie useState
+  const [success, setSuccess] = useState(""); // Poprawne użycie useState
 
   // Ustawiamy invoiceType na podstawie aktywnej zakładki
   useEffect(() => {
@@ -59,7 +59,6 @@ const AddInvoice = ({ activeTab }) => {
       return;
     }
 
-    // Przekształcanie danych do formatu JSON
     const invoiceData = {
       invoiceNumber: newInvoice.invoiceNumber,
       invoiceDate: newInvoice.invoiceDate,
@@ -112,6 +111,10 @@ const AddInvoice = ({ activeTab }) => {
           ? "Dodaj fakturę dochodową"
           : "Dodaj fakturę kosztową"}
       </h2>
+
+      {/* Wyświetlanie komunikatów o błędzie i sukcesie */}
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
 
       {/* Tabela formularza */}
       <table className="inputTables">

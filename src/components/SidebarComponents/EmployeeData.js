@@ -153,8 +153,8 @@ const EmployeeData = () => {
 
   return (
     <div>
-      <h1> Lista pracowników</h1>
       <AddEmployee onAddEmployee={handleAddNewEmployee} />
+      <h1> Lista pracowników</h1>
       <table className="employee-table">
         <thead>
           <tr>

@@ -134,6 +134,7 @@ function OrderListData() {
             selectedCustomerId={selectedCustomerId}
             onAddOrder={addOrder}
           />
+          <h2>Lista zamówień</h2>
           {isLoading ? (
             <p className="message loading">Ładowanie danych...</p>
           ) : error ? (
@@ -144,8 +145,7 @@ function OrderListData() {
                 <tr>
                   <th>Data</th>
                   <th>Opis</th>
-                  <th>Status</th>
-                  <th>Akcje</th>
+                  <th style={{ width: 20 }}>Akcje</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,7 +157,6 @@ function OrderListData() {
                         : "Brak danych"}
                     </td>
                     <td>{order.description}</td>
-                    <td>{order.status}</td>
                     <td>
                       <button onClick={() => handleDelete(index)}>Usuń</button>
                     </td>
