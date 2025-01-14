@@ -9,6 +9,8 @@ import InvoicesClient from "../components/SidebarComponents/InvoicesClient";
 import InvoicesCosts from "../components/SidebarComponents/InvoicesCosts";
 import OrderListData from "../components/SidebarComponents/OrderListData";
 import AddInvoice from "../components/SidebarComponents/AddInvoice";
+import PieChartClientInvoices from "../components/SidebarComponents/PieChartClientInvoices";
+import PieChartCostInvoices from "../components/SidebarComponents/PieChartCostInvoices";
 
 function Dashboard({ setIsAuthenticated }) {
   const [activeComponent, setActiveComponent] = useState("calendar");
@@ -73,8 +75,31 @@ function Dashboard({ setIsAuthenticated }) {
         );
       case "budget":
         return (
-          <div className="list">
-            <h1>Wykresy</h1>
+          <div className="chart-container2">
+            <div>
+              <table className="table-piechart">
+                <thead></thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <PieChartCostInvoices />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <table className="table-piechart">
+                <thead></thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <PieChartClientInvoices />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         );
       case "employee-data":

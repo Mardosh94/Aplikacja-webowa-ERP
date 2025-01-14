@@ -125,6 +125,9 @@ button:hover {
 .customer-table tr:hover {
   background-color: #f1f1f1; /* Zmiana tła przy najechaniu */
 }
+.table-piechart {
+  background-color: white;
+}
 .contact-section {
   width: 100%;
   border-radius: 10px;
@@ -326,6 +329,26 @@ td {
   position: fixed;
   bottom: 0;
   left: 10;
+}
+.chart-container {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+}
+
+.chart-container2 {
+  display: flex; /* Flexbox do rozmieszczenia dzieci */
+  width: 95%; /* Cała szerokość kontenera */
+  justify-content: space-between; /* Wyrównanie: lewy i prawy */
+}
+.table-piechart {
+  padding: 50px;
+  margin: 30px;
+  width: 600px; /* Szerokość pojedynczego wykresu */
+  height: 600px; /* Wysokość pojedynczego wykresu */
+  border: none;
+  border-radius: 10px;
 }
 
 @media screen and (max-width: 768px) {
