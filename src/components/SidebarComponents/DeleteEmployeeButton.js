@@ -1,17 +1,25 @@
 import React from "react";
 
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
-
 const DeleteEmployeeButton = ({ employeeId, onDelete }) => {
+  const token = localStorage.getItem("authToken"); // Pobranie tokena z localStorage
+
   const handleDelete = () => {
-    fetch(`${APIAddress}/Employees/delete/${employeeId}`, {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
+    fetch(`/Employees/delete/${employeeId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas usuwania pracownika");
         }
-        onDelete(employeeId); // Wywołanie funkcji aktualizacji po usunięciu
+        onDelete(employeeId);
       })
       .catch((error) => {
         console.error("Błąd podczas usuwania pracownika:", error);

@@ -11,7 +11,6 @@ import ProtectedRoute from "./components/Routes/ProtectedRoute";
 import "./styles/App.css";
 import "./styles/Buttons.css";
 
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
 const App = () => {
   const [loginData, setLoginData] = useState({
     emailOrUserName: "",
@@ -27,11 +26,11 @@ const App = () => {
 
   const [errors, setErrors] = useState({});
   const [showRegister, setShowRegister] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
+    const saveToken = localStorage.getItem("authToken");
+    if (saveToken) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -59,6 +58,20 @@ const App = () => {
     if (loginData.password.length < 6) {
       newErrors.password = "Hasło musi mieć co najmniej 6 znaków.";
     }
+    if (!/[A-Z]/.test(loginData.password)) {
+      newErrors.password =
+        "Hasło musi zawierać co najmniej jedną wielką literę.";
+    }
+    if (!/[0-9]/.test(loginData.password)) {
+      newErrors.password = "Hasło musi zawierać co najmniej jedną cyfrę.";
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>-]/.test(loginData.password)) {
+      newErrors.password =
+        "Hasło musi zawierać co najmniej jeden znak specjalny.";
+    }
+    if (/\s/.test(loginData.password)) {
+      newErrors.password = "Hasło nie może zawierać białych znaków.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -66,7 +79,7 @@ const App = () => {
   const onClickLogin = async () => {
     if (validateLoginPassword()) {
       try {
-        const response = await fetch(`${APIAddress}/Auth/api/login`, {
+        const response = await fetch(`/Auth/api/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -76,7 +89,8 @@ const App = () => {
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem("authToken", data.Token);
+          localStorage.setItem("authToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
           setIsAuthenticated(true);
           console.log("Dane do logowania:", loginData);
         } else {
@@ -92,17 +106,14 @@ const App = () => {
   const validateRegisterForm = () => {
     const newErrors = {};
 
-    // Sprawdzanie, czy hasła się zgadzają
     if (registerData.password !== registerData.confirmPassword) {
       newErrors.confirmPassword = "Hasła muszą być identyczne!";
     }
 
-    // Sprawdzanie minimalnej długości hasła
     if (registerData.password.length < 6) {
       newErrors.password = "Hasło musi mieć co najmniej 6 znaków.";
     }
 
-    // Sprawdzanie, czy wszystkie pola są wypełnione
     if (!registerData.email) {
       newErrors.email = "Email jest wymagany!";
     }
@@ -116,14 +127,14 @@ const App = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Jeśli brak błędów, formularz jest gotowy do wysłania
+    return Object.keys(newErrors).length === 0;
   };
 
   const onClickRegister = async () => {
     if (validateRegisterForm()) {
       try {
         console.log("JSON do rejestracji", registerData);
-        const response = await fetch(`${APIAddress}/Auth/api/register`, {
+        const response = await fetch(`/Auth/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +145,7 @@ const App = () => {
         if (response.ok) {
           const data = await response.json();
           console.log("Zarejestrowano pomyślnie!", data);
-          setShowRegister(false); // Przełączenie na formularz logowania
+          setShowRegister(false);
         } else {
           const error = await response.text();
           setErrors({ server: error });

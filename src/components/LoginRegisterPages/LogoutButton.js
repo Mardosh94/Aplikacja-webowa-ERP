@@ -6,13 +6,10 @@ const LogoutButton = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Usuwamy token z localStorage
     localStorage.removeItem("authToken");
 
-    // Ustawiamy isAuthenticated na false, aby wymusić przekierowanie do strony logowania
     setIsAuthenticated(false);
 
-    // Przekierowujemy na stronę logowania
     navigate("/login");
   };
 

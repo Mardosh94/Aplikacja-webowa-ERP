@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-const EditEmployeeModal = ({ employee, onSave, onClose }) => {
+const EditCustomerModal = ({ customer, onSave, onClose }) => {
   const [formData, setFormData] = useState({
+    companyName: "",
     firstName: "",
     lastName: "",
     email: "",
-    dateOfBirth: "",
     phoneNumber: "",
     city: "",
     postCode: "",
@@ -14,20 +14,20 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
   });
 
   useEffect(() => {
-    if (employee) {
+    if (customer) {
       setFormData({
-        firstName: employee.firstName,
-        lastName: employee.lastName,
-        email: employee.email,
-        phoneNumber: employee.phoneNumber,
-        dateOfBirth: employee.dateOfBirth,
-        city: employee.address.city,
-        postCode: employee.address.postCode,
-        street: employee.address.street,
-        buildingNumber: employee.address.buildingNumber,
+        companyName: customer.companyName,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        phoneNumber: customer.phoneNumber,
+        city: customer.address.city,
+        postCode: customer.address.postCode,
+        street: customer.address.street,
+        buildingNumber: customer.address.buildingNumber,
       });
     }
-  }, [employee]);
+  }, [customer]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,13 +39,13 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedEmployee = {
-      id: employee.id,
+    const updatedCustomer = {
+      id: customer.id,
+      companyName: formData.companyName,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
-      dateOfBirth: formData.dateOfBirth,
       address: {
         city: formData.city,
         postCode: formData.postCode,
@@ -54,7 +54,7 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
       },
     };
 
-    onSave(updatedEmployee);
+    onSave(updatedCustomer);
   };
 
   return (
@@ -63,8 +63,16 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
         <span className="close" onClick={onClose}>
           &times;
         </span>
-        <h2>Edycja pracownika</h2>
+        <h2>Edycja kontrahenta</h2>
         <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="companyName"
+            value={formData.companyName}
+            onChange={handleInputChange}
+            placeholder="Firma"
+            required
+          />
           <input
             type="text"
             name="firstName"
@@ -95,14 +103,6 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
             value={formData.phoneNumber}
             onChange={handleInputChange}
             placeholder="Numer telefonu"
-            required
-          />
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleInputChange}
-            placeholder="Data urodzenia"
             required
           />
           <input
@@ -144,4 +144,4 @@ const EditEmployeeModal = ({ employee, onSave, onClose }) => {
   );
 };
 
-export default EditEmployeeModal;
+export default EditCustomerModal;

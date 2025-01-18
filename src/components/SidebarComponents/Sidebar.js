@@ -6,10 +6,9 @@ import LogoutButton from "../LoginRegisterPages/LogoutButton";
 const Sidebar = ({ onMenuItemClick, setIsAuthenticated }) => {
   const [activeItem, setActiveItem] = useState("");
 
-  // Użycie efektu do ustawienia domyślnego elementu "calendar" po załadowaniu komponentu
   useEffect(() => {
     setActiveItem("calendar");
-    onMenuItemClick("calendar"); // Wywołanie funkcji, aby również zaktualizować stan w komponencie nadrzędnym
+    onMenuItemClick("calendar");
   }, [onMenuItemClick]);
 
   const handleItemClick = (text) => {
@@ -60,6 +59,13 @@ const Sidebar = ({ onMenuItemClick, setIsAuthenticated }) => {
             text="DANE PRACOWNIKÓW"
             isActive={activeItem === "employee-data"}
             onClick={() => handleItemClick("employee-data")}
+          />
+        </li>
+        <li>
+          <Icons
+            text="DANE KONTRAHENTÓW"
+            isActive={activeItem === "customer-data"}
+            onClick={() => handleItemClick("customer-data")}
           />
         </li>
         <LogoutButton setIsAuthenticated={setIsAuthenticated} />

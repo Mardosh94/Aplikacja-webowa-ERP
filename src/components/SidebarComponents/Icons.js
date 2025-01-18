@@ -17,6 +17,7 @@ const iconMap = {
   FAKTURY: costsIcon,
   BUDŻET: budgetIcon,
   "DANE PRACOWNIKÓW": dataIcon,
+  "DANE KONTRAHENTÓW": dataIcon,
   RAPORTY: raportsIcon,
   KONTAKT: contactIcon,
   GRUPY: groupIcon,

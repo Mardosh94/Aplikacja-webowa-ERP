@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "../../styles/Dashboard.css";
 
-const AddEmployee = ({ onAddEmployee }) => {
-  const [newEmployee, setNewEmployee] = useState({
+const AddCustomer = ({ onAddCustomer }) => {
+  const [newCustomer, setNewCustomer] = useState({
+    companyName: "",
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    dateOfBirth: "",
     address: {
       city: "",
       postCode: "",
@@ -23,7 +23,7 @@ const AddEmployee = ({ onAddEmployee }) => {
 
     if (name.startsWith("address.")) {
       const field = name.split(".")[1];
-      setNewEmployee((prev) => ({
+      setNewCustomer((prev) => ({
         ...prev,
         address: {
           ...prev.address,
@@ -31,7 +31,7 @@ const AddEmployee = ({ onAddEmployee }) => {
         },
       }));
     } else {
-      setNewEmployee((prev) => ({
+      setNewCustomer((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -40,30 +40,29 @@ const AddEmployee = ({ onAddEmployee }) => {
     setError("");
   };
 
-  const handleAddEmployee = () => {
+  const handleAddCustomer = () => {
     if (
-      !newEmployee.firstName ||
-      !newEmployee.lastName ||
-      !newEmployee.email ||
-      !newEmployee.phoneNumber ||
-      !newEmployee.dateOfBirth ||
-      !newEmployee.address.city ||
-      !newEmployee.address.postCode ||
-      !newEmployee.address.street ||
-      !newEmployee.address.buildingNumber
+      !newCustomer.firstName ||
+      !newCustomer.lastName ||
+      !newCustomer.email ||
+      !newCustomer.phoneNumber ||
+      !newCustomer.address.city ||
+      !newCustomer.address.postCode ||
+      !newCustomer.address.street ||
+      !newCustomer.address.buildingNumber
     ) {
       setError("Wszystkie pola muszą zostać uzupełnione.");
       return;
     }
 
-    onAddEmployee(newEmployee);
+    onAddCustomer(newCustomer);
 
-    setNewEmployee({
+    setNewCustomer({
+      companyName: "",
       firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
-      dateOfBirth: "",
       address: {
         city: "",
         postCode: "",
@@ -76,76 +75,77 @@ const AddEmployee = ({ onAddEmployee }) => {
   };
 
   return (
-    <div className="add-employee">
-      <h2>Dodaj nowego pracownika</h2>
+    <div className="add-customer">
+      <h2>Dodaj nowego kontrahenta</h2>
       <div className="input-row">
         <input
           type="text"
+          name="companyName"
+          value={newCustomer.companyNameName}
+          onChange={handleChange}
+          placeholder="Firma"
+        />
+        <input
+          type="text"
           name="firstName"
-          value={newEmployee.firstName}
+          value={newCustomer.firstName}
           onChange={handleChange}
           placeholder="Imię"
         />
         <input
           type="text"
           name="lastName"
-          value={newEmployee.lastName}
+          value={newCustomer.lastName}
           onChange={handleChange}
           placeholder="Nazwisko"
         />
         <input
           type="email"
           name="email"
-          value={newEmployee.email}
+          value={newCustomer.email}
           onChange={handleChange}
           placeholder="Email"
         />
         <input
           type="text"
           name="phoneNumber"
-          value={newEmployee.phoneNumber}
+          value={newCustomer.phoneNumber}
           onChange={handleChange}
           placeholder="numer telefonu"
         />
         <input
-          type="date"
-          name="dateOfBirth"
-          value={newEmployee.dateOfBirth}
-          onChange={handleChange}
-        />
-        <input
           type="text"
           name="address.city"
-          value={newEmployee.address.city}
+          value={newCustomer.address.city}
           onChange={handleChange}
           placeholder="Miasto"
         />
         <input
           type="text"
           name="address.postCode"
-          value={newEmployee.address.postCode}
+          value={newCustomer.address.postCode}
           onChange={handleChange}
           placeholder="Kod pocztowy"
         />
         <input
           type="text"
           name="address.street"
-          value={newEmployee.address.street}
+          value={newCustomer.address.street}
           onChange={handleChange}
           placeholder="Ulica"
         />
         <input
           type="text"
           name="address.buildingNumber"
-          value={newEmployee.address.buildingNumber}
+          value={newCustomer.address.buildingNumber}
           onChange={handleChange}
           placeholder="Numer budynku"
         />
-        <button onClick={handleAddEmployee}>Dodaj</button>
+        <button onClick={handleAddCustomer}>Dodaj</button>
       </div>
       {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
 
-export default AddEmployee;
+export default AddCustomer;

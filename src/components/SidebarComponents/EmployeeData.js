@@ -1,90 +1,166 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Dashboard.css";
 import AddEmployee from "./AddEmployee";
-import EditEmployeeModal from "./EditEmployeeModal"; // Nowy komponent modalu
-
-const APIAddress = process.env.REACT_APP_API_BASE_URL;
+import EditEmployeeModal from "./EditEmployeeModal";
 
 const EmployeeData = () => {
   const [employeeData, setEmployee] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Stan kontrolujący otwarcie modalu
-  const [employeeToEdit, setEmployeeToEdit] = useState(null); // Przechowywanie edytowanego pracownika
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [employeeToEdit, setEmployeeToEdit] = useState(null);
 
-  // Pobieranie danych pracowników
-  useEffect(() => {
-    fetch(`${APIAddress}/Employees/getAll`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Błąd podczas pobierania danych");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setEmployee(data);
-      })
-      .catch((error) => {
-        console.error("Błąd podczas pobierania danych:", error);
+  const token = localStorage.getItem("authToken"); // Pobierz token z localStorage
+
+  const fetchEmployees = async () => {
+    try {
+      if (!token) {
+        throw new Error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      }
+
+      const response = await fetch(`/Employees/getAll`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
+          "Content-Type": "application/json",
+        },
       });
-  }, []);
 
-  // Usuwanie pracownika
+      if (response.status === 401) {
+        throw new Error("Nieautoryzowany dostęp. Zaloguj się ponownie.");
+      }
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas pobierania danych");
+      }
+
+      const data = await response.json();
+      setEmployee(data); // Aktualizacja stanu
+    } catch (error) {
+      console.error("Błąd podczas pobierania danych:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  });
+
   const handleDeleteEmployee = (id) => {
-    fetch(`${APIAddress}/Employees/delete/${id}`, {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
+    fetch(`/Employees/delete/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
+        "Content-Type": "application/json",
+      },
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Błąd podczas usuwania pracownika");
         }
+        // Usuń pracownika z listy po udanym usunięciu na serwerze
         setEmployee((prev) => prev.filter((employee) => employee.id !== id));
       })
       .catch((error) => {
-        console.error("Błąd podczas usuwania pracownika:", error);
+        console.error("Błąd podczas usuwania pracownika:", error.message);
       });
   };
 
-  // Funkcja otwierająca modal edycji
   const handleEditEmployee = (employee) => {
-    setEmployeeToEdit(employee); // Ustawiamy pracownika do edycji
-    setIsModalOpen(true); // Otwieramy modal
+    setEmployeeToEdit(employee);
+    setIsModalOpen(true);
   };
 
-  // Funkcja do zapisania edytowanych danych
-  const handleSaveEditedEmployee = (editedEmployee) => {
-    fetch(`${APIAddress}/Employees/update/${editedEmployee.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editedEmployee),
+  const handleAddNewEmployee = (newEmployee) => {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
+    fetch(`/Employees/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Dodanie nagłówka Authorization
+      },
+      body: JSON.stringify(newEmployee),
     })
       .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        }
+        throw new Error("Błąd podczas dodawania pracownika");
+      })
+      .then((createdEmployee) => {
+        setEmployee((prev) => [...prev, createdEmployee]);
+      })
+      .catch((error) => {
+        console.error("Błąd podczas dodawania pracownika:", error.message);
+      });
+  };
+
+  const handleSaveEditedEmployee = (editedEmployee) => {
+    if (!token) {
+      console.error("Brak tokena autoryzacyjnego. Zaloguj się ponownie.");
+      return;
+    }
+
+    fetch(`/Employees/update?id=${editedEmployee.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        firstName: editedEmployee.firstName,
+        lastName: editedEmployee.lastName,
+        email: editedEmployee.email,
+        phoneNumber: editedEmployee.phoneNumber,
+        dateOfBirth: editedEmployee.dateOfBirth,
+        address: editedEmployee.address,
+      }),
+    })
+      .then((response) => {
+        console.log(
+          JSON.stringify({
+            firstName: editedEmployee.firstName,
+            lastName: editedEmployee.lastName,
+            email: editedEmployee.email,
+            phoneNumber: editedEmployee.phoneNumber,
+            dateOfBirth: editedEmployee.dateOfBirth,
+            address: editedEmployee.address,
+          })
+        );
         if (!response.ok) {
           throw new Error("Błąd podczas zapisywania danych");
         }
+        return response.json();
+      })
+      .then((updatedData) => {
         setEmployee((prev) =>
           prev.map((emp) =>
-            emp.id === editedEmployee.id ? editedEmployee : emp
+            emp.id === editedEmployee.id ? { ...emp, ...updatedData } : emp
           )
         );
-        setIsModalOpen(false); // Zamykamy modal po zapisaniu
+        setIsModalOpen(false);
       })
       .catch((error) => {
-        console.error("Błąd podczas zapisywania danych:", error);
+        console.error("Błąd podczas zapisywania danych:", error.message);
       });
   };
 
   return (
     <div>
-      <h1>Lista pracowników</h1>
-      <AddEmployee
-        onAddEmployee={(newEmployee) =>
-          setEmployee((prev) => [...prev, newEmployee])
-        }
-      />
+      <AddEmployee onAddEmployee={handleAddNewEmployee} />
+      <h1> Lista pracowników</h1>
       <table className="employee-table">
         <thead>
           <tr>
             <th>Imię i Nazwisko</th>
             <th>Email</th>
+            <th>Numer telefonu</th>
             <th>Data urodzenia</th>
             <th>Adres</th>
             <th>Akcje</th>
@@ -95,6 +171,7 @@ const EmployeeData = () => {
             <tr key={employee.id}>
               <td>{`${employee.firstName} ${employee.lastName}`}</td>
               <td>{employee.email}</td>
+              <td>{employee.phoneNumber}</td>
               <td>
                 {employee.dateOfBirth
                   ? new Date(employee.dateOfBirth).toLocaleDateString()
@@ -105,17 +182,11 @@ const EmployeeData = () => {
                   ? `${employee.address.city}, ${employee.address.postCode}, ${employee.address.street} ${employee.address.buildingNumber}`
                   : "Brak adresu"}
               </td>
-              <td>
-                <button
-                  className="edit-button"
-                  onClick={() => handleEditEmployee(employee)}
-                >
+              <td className="actions">
+                <button onClick={() => handleEditEmployee(employee)}>
                   Edytuj
                 </button>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteEmployee(employee.id)}
-                >
+                <button onClick={() => handleDeleteEmployee(employee.id)}>
                   Usuń
                 </button>
               </td>
@@ -124,7 +195,6 @@ const EmployeeData = () => {
         </tbody>
       </table>
 
-      {/* Modal edycji pracownika */}
       {isModalOpen && (
         <EditEmployeeModal
           employee={employeeToEdit}
