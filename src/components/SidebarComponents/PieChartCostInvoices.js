@@ -69,7 +69,7 @@ const PieChartCostInvoices = () => {
 
   return (
     <div>
-      <h2>Wykres Faktur Kosztowych</h2>
+      <h2>Wykres faktur kosztowych</h2>
       <Pie className="" data={PieChartData()} />
     </div>
   );

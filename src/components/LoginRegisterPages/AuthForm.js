@@ -25,7 +25,7 @@ const AuthForm = ({
   <div className="layout">
     <div className="container">
       <div className="header">
-        <h1>{showRegister ? "Dołącz Do Nas!" : "Witaj Z Powrotem!"}</h1>
+        <h1>{showRegister ? "Dołącz do nas!" : "Witaj z powrotem!"}</h1>
         <h2>{showRegister ? "Zarejestruj się" : "Zaloguj się"}</h2>
         <hr />
       </div>

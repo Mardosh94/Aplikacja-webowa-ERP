@@ -112,11 +112,9 @@ const AddInvoice = ({ activeTab }) => {
           : "Dodaj fakturę kosztową"}
       </h2>
 
-      {/* Wyświetlanie komunikatów o błędzie i sukcesie */}
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
 
-      {/* Tabela formularza */}
       <table className="inputTables">
         <thead>
           <tr>

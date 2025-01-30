@@ -11,7 +11,6 @@ function OrderListData() {
 
   const token = localStorage.getItem("authToken");
 
-  // Fetch list of customers
   useEffect(() => {
     fetch("/Customers/getAll", {
       method: "GET",
@@ -33,7 +32,6 @@ function OrderListData() {
       });
   }, [token]);
 
-  // Fetch orders for selected customer
   useEffect(() => {
     if (!selectedCustomerId) {
       setOrders([]);
@@ -66,7 +64,6 @@ function OrderListData() {
       .finally(() => setIsLoading(false));
   }, [selectedCustomerId, token]);
 
-  // Delete order
   const handleDelete = (index) => {
     if (!selectedCustomerId || !orders || index < 0 || index >= orders.length) {
       console.error("Nieprawidłowe dane do usunięcia.");
@@ -78,7 +75,6 @@ function OrderListData() {
     deleteOrderEntry(selectedCustomerId, orderId)
       .then(() => {
         console.log(`Zamówienie o ID ${orderId} zostało usunięte.`);
-        // Refresh order list
         fetch(`/Customers/${selectedCustomerId}/Orders`, {
           method: "GET",
           headers: {

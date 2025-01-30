@@ -37,7 +37,7 @@ function Dashboard({ setIsAuthenticated }) {
       case "orders-list":
         return (
           <div className="list">
-            <h1>Lista Zleceń</h1>
+            <h1>Lista zleceń</h1>
             <OrderListData />
           </div>
         );

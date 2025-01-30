@@ -117,7 +117,7 @@ function TimesheetData() {
 
   return (
     <div>
-      <h1>Lista Obecności</h1>
+      <h1>Lista obecności</h1>
       <select
         onChange={(e) => setSelectedEmployeeId(parseInt(e.target.value, 10))}
         defaultValue=""

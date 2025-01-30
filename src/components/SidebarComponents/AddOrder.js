@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../styles/Dashboard.css";
 
-const token = localStorage.getItem("authToken"); // Pobieranie tokena z localStorage
+const token = localStorage.getItem("authToken");
 
 const AddOrder = ({ selectedCustomerId, onAddOrder }) => {
   const [newOrder, setNewOrder] = useState({
